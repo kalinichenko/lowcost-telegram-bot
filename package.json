@@ -1,0 +1,29 @@
+{
+  "name": "pauschal-scanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "dayjs": "^1.8.18",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "pg": "^7.15.1",
+    "telegraf": "^3.35.0",
+    "telegraf-inline-menu": "^4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": "~12"
+  }
+}
