@@ -1,4 +1,4 @@
-const { NEW_SEARCH_ACTION } = require("../actions");
+import { NEW_SEARCH_ACTION } from "../actions";
 const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 
@@ -9,4 +9,4 @@ const keyboard = Markup.inlineKeyboard([
   )
 ]);
 
-module.exports = Extra.markup(keyboard);
+export const newSearchKeyboard = Extra.markup(keyboard);

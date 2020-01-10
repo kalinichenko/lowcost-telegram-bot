@@ -1,6 +1,7 @@
-const dayjs = require("dayjs");
-const { flatten, sortBy, uniqBy } = require("lodash");
-const getCheapestFlights = require("./getCheapestFlights");
+import dayjs = require("dayjs");
+import { flatten, sortBy, uniqBy } from "lodash";
+import { getCheapestFlights } from "./getCheapestFlights";
+import { Flight } from "../../types";
 
 const DAY = 1000 * 3600 * 24;
 const MAX_FLEX_DAYS = 6;
@@ -22,9 +23,9 @@ const scanPrices = (departureDateMin, departureDateMax) => {
   return res;
 };
 
-const getCheapestFlightForPeriod = ({
-  origin,
-  destination,
+export const getCheapestFlightsForPeriod = ({
+  departureIataCode,
+  arrivalIataCode,
   departureDateMin,
   departureDateMax,
   adults,
@@ -36,8 +37,8 @@ const getCheapestFlightForPeriod = ({
     scanPrices(departureDateMin, departureDateMax).map(
       async ({ departureDate, flexDays }) => {
         return await getCheapestFlights({
-          origin,
-          destination,
+          departureIataCode,
+          arrivalIataCode,
           departureDate,
           flexDays,
           adults,
@@ -49,7 +50,5 @@ const getCheapestFlightForPeriod = ({
     )
   )
     .then(flatten)
-    .then(res => uniqBy(res, o => o.dateOut))
-    .then(res => sortBy(res, o => new Date(o.dateOut).getTime()));
-
-module.exports = getCheapestFlightForPeriod;
+    .then(res => uniqBy(res, (flight: Flight) => flight.dateOut.getTime()))
+    .then(res => sortBy(res, (flight: Flight) => flight.dateOut.getTime()));

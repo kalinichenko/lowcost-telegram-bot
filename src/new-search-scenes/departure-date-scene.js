@@ -1,8 +1,9 @@
 const Scene = require("telegraf/scenes/base");
-const { DEPARTURE_DATE_SCENE, ARRIVAL_DATE_SCENE } = require("../scenes");
-const parseDateRange = require("../utils/parseDateRange");
+import formatDate from "../utils/formatDate";
+import { DEPARTURE_DATE_SCENE, ARRIVAL_DATE_SCENE } from "../scenes";
+import { parseDateRange } from "../utils/parseDateRange";
 
-const departureDateScene = new Scene(DEPARTURE_DATE_SCENE);
+export const departureDateScene = new Scene(DEPARTURE_DATE_SCENE);
 departureDateScene.enter(ctx =>
   ctx.reply(
     "Enter departure date or range of dates (e.g 29.02 or 29.02-07.03)",
@@ -34,18 +35,16 @@ departureDateScene.on("message", async ctx => {
     const days =
       (departureDateMax.getTime() - departureDateMin.getTime()) /
       (1000 * 3600 * 24);
-    if (Math.abs(days) > 18) {
+    if (Math.abs(days) > 31) {
       ctx.reply("Entered date range is too big");
       return;
     }
   }
   ctx.session.searchParams = {
     ...ctx.session.searchParams,
-    departureDateMin,
-    departureDateMax
+    departureDateMin: formatDate(departureDateMin),
+    departureDateMax: formatDate(departureDateMax)
   };
   ctx.scene.leave(DEPARTURE_DATE_SCENE);
   ctx.scene.enter(ARRIVAL_DATE_SCENE);
 });
-
-module.exports = departureDateScene;

@@ -1,6 +1,5 @@
-module.exports = {
-  NEW_SEARCH_ACTION: "new_search_action",
-  SEARCH_ACTION: "search_action",
-  MAIN_MENU_ACTION: "main_menu_action",
-  CREATE_PRICE_ALERT: "create_price_alert"
-};
+export const NEW_SEARCH_ACTION = "new_search_action";
+export const SEARCH_ACTION = "search_action";
+export const MAIN_MENU_ACTION = "main_menu_action";
+export const CREATE_PRICE_ALERT_ACTION = "create_price_alert_action";
+export const SUBSCRIPTION_LIST_ACTION = "subscription_list_action";

@@ -1,19 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const { scanFlights } = require("./src/flights");
+import { scanFlights } from "./flights";
 // const getRyanairFlight = require("./src/ryanair/availability");
-
-const bot = require("./src/bot");
-
+import { bot } from "./bot";
 const port = process.env.PORT;
 const TOKEN = process.env.TELEGRAM_TOKEN;
-
 const app = express();
-
 app.use(bodyParser.json());
 app.use(bot.webhookCallback(`/bot${TOKEN}`));
-
 app.get(`/flights`, async (_, res) => {
   try {
     await scanFlights();
@@ -22,15 +17,12 @@ app.get(`/flights`, async (_, res) => {
     res.sendStatus(500, "Refresh flights failed");
   }
 });
-
 app.get(`/`, (req, res) => {
   res.send("Hello World!");
 });
-
 app.listen(port, () => {
   console.log(`Express server is listening on ${port}`);
 });
-
 // getRyanairFlight({
 //   origin: "SXF",
 //   destination: "KBP",

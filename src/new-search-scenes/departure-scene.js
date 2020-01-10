@@ -1,11 +1,11 @@
-const { size, head, get } = require("lodash");
+import { size, head, get } from "lodash";
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
-const { getAirports } = require("../db/airports");
-const { DEPARTURE_SCENE, ARRIVAL_SCENE } = require("../scenes");
+import { getAirports } from "../db/airports";
+import { DEPARTURE_SCENE, ARRIVAL_SCENE } from "../scenes";
 
-const departureScene = new Scene(DEPARTURE_SCENE);
+export const departureScene = new Scene(DEPARTURE_SCENE);
 
 departureScene.enter(ctx => {
   ctx.session.searchParams = null;
@@ -25,13 +25,15 @@ departureScene.enter(ctx => {
 departureScene.on("message", async ctx => {
   const msg = ctx.message.text;
 
+  console.log(msg);
   const airports = await getAirports(msg);
-
+  console.log(airports);
   switch (size(airports)) {
     case 1: {
       const airport = head(airports);
+      console.log("airport", airport);
       ctx.session.searchParams = {
-        departureCode: get(airport, "iataCode"),
+        departureIataCode: get(airport, "iataCode"),
         departureAirport: get(airport, "airportName")
       };
 
@@ -55,5 +57,3 @@ departureScene.on("message", async ctx => {
     }
   }
 });
-
-module.exports = departureScene;

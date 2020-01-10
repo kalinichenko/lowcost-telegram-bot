@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "lib": ["es2018"],
+    "module": "commonjs",
+    "target": "es2018",
+    "outDir": "./build",
+    "allowJs": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "ext": "ts"
+}

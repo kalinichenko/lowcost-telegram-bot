@@ -1,9 +1,9 @@
 const Scene = require("telegraf/scenes/base");
-const { SEARCH_ACTION } = require("../actions");
-const { PASSENGERS_SCENE, SEARCH_RESULT_SCENE } = require("../scenes");
-const searchNowKeyboard = require("../keyboards/search-now-keyboard");
+import { SEARCH_ACTION } from "../actions";
+import { PASSENGERS_SCENE, SEARCH_RESULT_SCENE } from "../scenes";
+import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
 
-const passengersScene = new Scene(PASSENGERS_SCENE);
+export const passengersScene = new Scene(PASSENGERS_SCENE);
 
 passengersScene.enter(ctx => {
   ctx.replyWithHTML(
@@ -39,5 +39,3 @@ passengersScene.on("message", async ctx => {
   ctx.scene.leave(PASSENGERS_SCENE);
   ctx.scene.enter(SEARCH_RESULT_SCENE);
 });
-
-module.exports = passengersScene;

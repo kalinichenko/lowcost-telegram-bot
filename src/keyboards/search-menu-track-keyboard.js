@@ -1,10 +1,9 @@
-const {
+import {
   NEW_SEARCH_ACTION,
   MAIN_MENU_ACTION,
-  CREATE_PRICE_ALERT
-} = require("../actions");
-const Markup = require("telegraf/markup");
-const Extra = require("telegraf/extra");
+  CREATE_PRICE_ALERT_ACTION
+} from "../actions";
+import { Markup, Extra } from "telegraf";
 
 const keyboard = Markup.inlineKeyboard(
   [
@@ -15,7 +14,7 @@ const keyboard = Markup.inlineKeyboard(
     ),
     Markup.callbackButton(
       String.fromCodePoint(0x1f514) + " Create price alert",
-      CREATE_PRICE_ALERT
+      CREATE_PRICE_ALERT_ACTION
     )
   ],
   {
@@ -23,4 +22,4 @@ const keyboard = Markup.inlineKeyboard(
   }
 );
 
-module.exports = Extra.markup(keyboard);
+export const searchMenuTrackKeyboard = Extra.markup(keyboard);

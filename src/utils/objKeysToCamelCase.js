@@ -1,6 +1,6 @@
-const { reduce, camelCase } = require("lodash");
+import { reduce, camelCase } from "lodash";
 
-const objKeysToCamelCase = obj => {
+export default obj => {
   return reduce(
     obj,
     (result, value, key) => {
@@ -10,5 +10,3 @@ const objKeysToCamelCase = obj => {
     {}
   );
 };
-
-module.exports = objKeysToCamelCase;

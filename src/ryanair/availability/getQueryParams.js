@@ -1,6 +1,6 @@
-const getQueryParams = ({
-  origin,
-  destination,
+export const getQueryParams = ({
+  departureIataCode,
+  arrivalIataCode,
   departureDate,
   flexDays,
   arrivalDate,
@@ -14,10 +14,10 @@ const getQueryParams = ({
     TEEN: teens,
     CHD: children,
     DateOut: departureDate,
-    Destination: destination,
+    Destination: arrivalIataCode,
     Disc: 0,
     INF: infants,
-    Origin: origin,
+    Origin: departureIataCode,
     RoundTrip: false,
     FlexDaysIn: flexDays,
     FlexDaysOut: flexDays,
@@ -30,5 +30,3 @@ const getQueryParams = ({
   }
   return params;
 };
-
-module.exports = getQueryParams;

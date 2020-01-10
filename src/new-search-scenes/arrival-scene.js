@@ -1,10 +1,10 @@
-const { size, head, get } = require("lodash");
+import { size, head, get } from "lodash";
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
-const { ARRIVAL_SCENE, DEPARTURE_DATE_SCENE } = require("../scenes");
-const { getAirports } = require("../db/airports");
+import { ARRIVAL_SCENE, DEPARTURE_DATE_SCENE } from "../scenes";
+import { getAirports } from "../db/airports";
 
-const arrivalScene = new Scene(ARRIVAL_SCENE);
+export const arrivalScene = new Scene(ARRIVAL_SCENE);
 arrivalScene.enter(ctx =>
   ctx.reply("Type the airport of arrival", {
     reply_markup: {
@@ -30,7 +30,7 @@ arrivalScene.on("message", async ctx => {
       const airport = head(airports);
       ctx.session.searchParams = {
         ...ctx.session.searchParams,
-        arrivalCode: get(airport, "iataCode"),
+        arrivalIataCode: get(airport, "iataCode"),
         arrivalAirport: get(airport, "airportName")
       };
 
@@ -54,5 +54,3 @@ arrivalScene.on("message", async ctx => {
     }
   }
 });
-
-module.exports = arrivalScene;

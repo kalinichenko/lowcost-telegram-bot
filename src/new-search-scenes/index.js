@@ -1,15 +1,6 @@
-const departureScene = require("./departure-scene");
-const departureDateScene = require("./departure-date-scene");
-const arrivalScene = require("./arrival-scene");
-const arrivalDateScene = require("./arrival-date-scene");
-const searchResultScene = require("./search-result-scene");
-const passengersScene = require("./passenger-scene");
-
-module.exports = {
-  departureScene,
-  arrivalScene,
-  departureDateScene,
-  arrivalDateScene,
-  searchResultScene,
-  passengersScene
-};
+export { departureScene } from "./departure-scene";
+export { departureDateScene } from "./departure-date-scene";
+export { arrivalScene } from "./arrival-scene";
+export { arrivalDateScene } from "./arrival-date-scene";
+export { searchResultScene } from "./search-result-scene";
+export { passengersScene } from "./passenger-scene";

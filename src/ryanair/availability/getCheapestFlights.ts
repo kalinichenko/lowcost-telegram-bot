@@ -1,10 +1,11 @@
 const axios = require("axios");
 const querystring = require("querystring");
-const { get, isEmpty, reduce, minBy } = require("lodash");
+import { get, isEmpty, reduce, minBy } from "lodash";
+import { Flight } from "../../types";
 
-const getQueryParams = require("./getQueryParams");
+import { getQueryParams } from "./getQueryParams";
 
-const findCheapestFlights = ({ dates, origin, destination }) =>
+const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) =>
   reduce(
     dates,
     (acc, date) => {
@@ -13,20 +14,22 @@ const findCheapestFlights = ({ dates, origin, destination }) =>
           get(f.regularFare, "fares.0.amount")
         );
 
-        acc.push({
+        const flight: Flight = {
           amount: get(cheapestFlight, "regularFare.fares.0.amount"),
           departureTime: get(cheapestFlight, "time.0"),
           arrivalTime: get(cheapestFlight, "time.1"),
-          origin,
-          destination
-        });
+          departureIataCode,
+          arrivalIataCode,
+          dateOut: new Date(date.dateOut)
+        };
+        acc.push(flight);
       }
       return acc;
     },
     []
   );
 
-const getCheapestFlights = props => {
+export const getCheapestFlights = props => {
   const params = getQueryParams(props);
   console.log(
     `https://www.ryanair.com/api/booking/v4/en-gb/availability?${querystring.stringify(
@@ -47,8 +50,8 @@ const getCheapestFlights = props => {
 
       return findCheapestFlights({
         dates,
-        destination: props.destination,
-        origin: props.origin
+        arrivalIataCode: props.arrivalIataCode,
+        departureIataCode: props.departureIataCode
       });
     })
     .catch(error => {
@@ -60,5 +63,3 @@ const getCheapestFlights = props => {
       return [];
     });
 };
-
-module.exports = getCheapestFlights;

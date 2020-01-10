@@ -1,25 +1,24 @@
 const dayjs = require("dayjs");
-const { head, get } = require("lodash");
-const { getAirports } = require("../db/airports");
+import { get } from "lodash";
+import { getAirportByIataCode } from "../db/airports";
 
 const getAirportName = async iataCode =>
-  get(head(await getAirports(iataCode)), "airportName");
+  get(await getAirportByIataCode(iataCode), "airportName");
 
-const flightFormatter = async ({
-  origin,
-  destination,
+export default async ({
+  departureIataCode,
+  arrivalIataCode,
   departureTime,
   arrivalTime,
   amount
 }) => {
-  const originCityName = await getAirportName(origin);
-  const destinationCityName = await getAirportName(destination);
+  const departureAirportName = await getAirportName(departureIataCode);
+  const arrivalAirportName = await getAirportName(arrivalIataCode);
 
   return (
-    `<b>${originCityName} (${origin}) - ${destinationCityName} (${destination})</b>\n` +
+    `<b>${departureAirportName} (${departureIataCode}) - ${arrivalAirportName} (${arrivalIataCode})</b>\n` +
     `Departure: ${dayjs(departureTime).format("DD.MM HH:mm")}\n` +
     `Arrival: ${dayjs(arrivalTime).format("DD.MM HH:mm")}\n` +
     `Price: ${amount}\n`
   );
 };
-module.exports = flightFormatter;

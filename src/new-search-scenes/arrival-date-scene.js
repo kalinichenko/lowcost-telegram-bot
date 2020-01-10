@@ -1,15 +1,16 @@
-const { includes, split } = require("lodash");
+import { includes, split, parseInt } from "lodash";
+import formatDate from "../utils/formatDate";
 const Scene = require("telegraf/scenes/base");
-const {
+import {
   ARRIVAL_DATE_SCENE,
   SEARCH_RESULT_SCENE,
   PASSENGERS_SCENE
-} = require("../scenes");
-const parseDateRange = require("../utils/parseDateRange");
-const searchNowKeyboard = require("../keyboards/search-now-keyboard");
-const { SEARCH_ACTION } = require("../actions");
+} from "../scenes";
+import { parseDateRange } from "../utils/parseDateRange";
+import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
+import { SEARCH_ACTION } from "../actions";
 
-const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
+export const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
 
 arrivalDateScene.action(SEARCH_ACTION, ctx => {
   ctx.scene.leave(ARRIVAL_DATE_SCENE);
@@ -33,12 +34,12 @@ arrivalDateScene.enter(ctx =>
 arrivalDateScene.on("message", async ctx => {
   const msg = ctx.message.text;
 
-  if (includes(msg, ".")) {
+  if (!includes(msg, ".")) {
     const [durationMin, durationMax] = split(msg, "-");
     ctx.session.searchParams = {
       ...ctx.session.searchParams,
-      durationMin,
-      durationMax
+      durationMin: durationMin && parseInt(durationMin, 10),
+      durationMax: durationMax && parseInt(durationMax, 10)
     };
   } else {
     const [arrivalDateMin, arrivalDateMax] = parseDateRange(msg);
@@ -59,13 +60,11 @@ arrivalDateScene.on("message", async ctx => {
     }
     ctx.session.searchParams = {
       ...ctx.session.searchParams,
-      arrivalDateMin,
-      arrivalDateMax
+      arrivalDateMin: formatDate(arrivalDateMin),
+      arrivalDateMax: formatDate(arrivalDateMax)
     };
   }
 
   ctx.scene.leave(ARRIVAL_DATE_SCENE);
   ctx.scene.enter(PASSENGERS_SCENE);
 });
-
-module.exports = arrivalDateScene;

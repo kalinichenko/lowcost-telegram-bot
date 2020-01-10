@@ -1,4 +1,4 @@
-const { isNaN } = require("lodash");
+import { isNaN } from "lodash";
 
 const MM = new Date().getMonth();
 const YYYY = new Date().getFullYear();
@@ -25,9 +25,7 @@ const parseDate = ddmm => {
   return new Date(month - 1 >= MM ? YYYY : YYYY + 1, month - 1, date);
 };
 
-const parseDateRange = dateRange => {
+export const parseDateRange = dateRange => {
   const [dateMin, dateMax] = dateRange.split("-");
   return [parseDate(dateMin), parseDate(dateMax)];
 };
-
-module.exports = parseDateRange;
