@@ -12,7 +12,7 @@ export const saveFlightPrice = async ({ price, subscriptionId }) => {
       ) values($1,$2)`,
       [price, subscriptionId]
     );
-    console.log(`Flight price added`);
+    // console.log(`Flight price added`);
     client.release();
   } catch (err) {
     console.error(err);
@@ -31,7 +31,7 @@ export const updateFlightPrice = async ({ price, subscriptionId }) => {
       `,
       [price, subscriptionId]
     );
-    console.log(`Flight price updated`);
+    // console.log(`Flight price updated`);
     client.release();
   } catch (err) {
     console.error(err);
@@ -47,7 +47,7 @@ export const removeFlightPrice = async (subscriptionId: number) => {
       [subscriptionId]
     );
     client.release();
-    console.log(`Flights removed: ${result.rows.length} records`);
+    // console.log(`Flights removed: ${result.rows.length} records`);
     return result.rows;
   } catch (err) {
     console.error(err);
@@ -67,7 +67,7 @@ export const getFlightPrice = async ({ subscriptionId }) => {
       [subscriptionId]
     );
     client.release();
-    console.log(`flight prices requested: ${result.rows.length} records`);
+    // console.log(`flight prices requested: ${result.rows.length} records`);
     return map(result.rows, objKeysToCamelCase);
   } catch (err) {
     console.error(err);

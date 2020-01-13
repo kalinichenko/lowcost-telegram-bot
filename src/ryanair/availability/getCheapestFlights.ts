@@ -31,11 +31,11 @@ const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) =>
 
 export const getCheapestFlights = props => {
   const params = getQueryParams(props);
-  console.log(
-    `https://www.ryanair.com/api/booking/v4/en-gb/availability?${querystring.stringify(
-      params
-    )}`
-  );
+  // console.log(
+  //   `https://www.ryanair.com/api/booking/v4/en-gb/availability?${querystring.stringify(
+  //     params
+  //   )}`
+  // );
 
   return axios
     .get("https://www.ryanair.com/api/booking/v4/en-gb/availability", {
