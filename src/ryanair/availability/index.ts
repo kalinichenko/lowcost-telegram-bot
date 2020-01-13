@@ -13,7 +13,7 @@ const getCheapestTripWithDuration = ({
   outbounds,
   durationMin,
   durationMax
-}) => {
+}): Promise<Trip> => {
   const cheapestFlight = isEmpty(inbounds)
     ? { outbound: minBy(outbounds, "amount") }
     : reduce(
@@ -39,11 +39,11 @@ const getCheapestTripWithDuration = ({
           // console.log("possibleInbounds:", possibleInbounds);
 
           const minAmount = get(minBy(possibleInbounds, "amount"), "amount");
-          const tripAmount = minAmount + outbound.amount;
+          const amount = minAmount + outbound.amount;
 
           // console.log("minAmount", minAmount);
 
-          if (!acc.tripAmount || acc.tripAmount > tripAmount) {
+          if (!acc.amount || acc.amount > amount) {
             const inbound = find(inbounds, inbound => {
               const inboundTime = new Date(inbound.departureTime).getTime();
               return (
@@ -56,7 +56,7 @@ const getCheapestTripWithDuration = ({
             return {
               inbound,
               outbound,
-              tripAmount
+              amount
             };
           }
           return acc;
@@ -67,7 +67,9 @@ const getCheapestTripWithDuration = ({
   return cheapestFlight;
 };
 
-export const getRyanairFlight = async (subscription: Subscription) => {
+export const getRyanairFlight = async (
+  subscription: Subscription
+): Promise<Trip> => {
   const {
     departureIataCode,
     arrivalIataCode,
@@ -109,8 +111,12 @@ export const getRyanairFlight = async (subscription: Subscription) => {
 
   console.log("outbounds:", outbounds);
   if (!arrivalDateMin && !durationMin) {
+    const outbound = departureDateMax
+      ? minBy(outbounds, "amount")
+      : head(outbounds);
     return {
-      outbound: departureDateMax ? minBy(outbounds, "amount") : head(outbounds)
+      outbound,
+      amount: outbound.amount
     };
   }
 
@@ -164,8 +170,15 @@ export const getRyanairFlight = async (subscription: Subscription) => {
       durationMax
     });
   }
+
+  const outbound = departureDateMax
+    ? minBy(outbounds, "amount")
+    : head(outbounds);
+  const inbound = inboundDateMax ? minBy(inbounds, "amount") : head(inbounds);
+
   return {
-    outbound: departureDateMax ? minBy(outbounds, "amount") : head(outbounds),
-    inbound: inboundDateMax ? minBy(inbounds, "amount") : head(inbounds)
+    outbound,
+    inbound,
+    amount: outbound.amount + inbound.amount
   };
 };

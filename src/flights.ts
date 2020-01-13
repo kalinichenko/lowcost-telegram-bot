@@ -12,6 +12,7 @@ import { getRyanairFlight } from "./ryanair/availability";
 import getRyanairUrl from "./ryanair/availability/getUrl";
 import flightFormatter from "./utils/flightFormatter";
 import { bot } from "./bot";
+import { Trip } from "./types";
 
 export const scanFlights = async () => {
   const subscriptions = await getAllFlightSubscriptions();
@@ -24,30 +25,23 @@ export const scanFlights = async () => {
       })
     );
 
-    const cheapestFlight = await getRyanairFlight(subscription);
-    const nextCheapestPrice =
-      get(cheapestFlight, "outbound.amount", 0) +
-      get(cheapestFlight, "inbound.amount", 0);
+    const cheapestFlight: Trip = await getRyanairFlight(subscription);
 
-    console.log(cheapestFlight, nextCheapestPrice);
+    console.log(cheapestFlight, cheapestFlight.amount);
 
     if (flightPrice) {
       updateFlightPrice({
-        price: nextCheapestPrice,
+        price: cheapestFlight.amount,
         subscriptionId
       });
-      const priceChange = Math.abs(nextCheapestPrice - flightPrice.price);
+      const priceChange = Math.abs(cheapestFlight.amount - flightPrice.price);
       if (priceChange > flightPrice.price / 20) {
-        notify({
-          subscription,
-          cheapestFlight,
-          oldPrice: flightPrice.price
-        });
+        notify(subscription, cheapestFlight, flightPrice.price);
       }
       console.log("priceChange:", priceChange);
     } else {
       saveFlightPrice({
-        price: nextCheapestPrice,
+        price: cheapestFlight.amount,
         subscriptionId
       });
     }
@@ -56,14 +50,17 @@ export const scanFlights = async () => {
   // console.log(subscriptions);
 };
 
-const notify = async ({ subscription, cheapestFlight, oldPrice }) => {
-  const {
-    chatId,
-    departureIataCode,
-    arrivalIataCode,
-    departureTime,
-    arrivalTime
-  } = subscription;
+const notify = async (
+  subscription: Subscription,
+  cheapestFlight: Trip,
+  oldPrice: number
+) => {
+  const { chatId, departureIataCode, arrivalIataCode } = subscription;
+
+  const { outbound, inbound, amount } = cheapestFlight;
+
+  const departureTime = get(outbound, "dateOut");
+  const arrivalTime = get(outbound, "dateOut");
 
   const url = getRyanairUrl({
     departureIataCode,
@@ -72,18 +69,14 @@ const notify = async ({ subscription, cheapestFlight, oldPrice }) => {
     arrivalTime
   });
 
-  const outbound = cheapestFlight.outbound
-    ? await flightFormatter(cheapestFlight.outbound)
-    : "";
-
-  const inbound = cheapestFlight.inbound
-    ? await flightFormatter(cheapestFlight.inbound)
-    : "";
+  const outboundMessage = outbound ? await flightFormatter(outbound) : "";
+  const inboundMessage = inbound ? await flightFormatter(inbound) : "";
 
   const response =
     `Old price: ${oldPrice}\n` +
-    outbound +
-    inbound +
+    `New price: ${amount}\n` +
+    outboundMessage +
+    inboundMessage +
     `Buy ticket <a href="${url}">here</>`;
   bot.telegram.sendMessage(chatId, response, { parse_mode: "HTML" });
 };

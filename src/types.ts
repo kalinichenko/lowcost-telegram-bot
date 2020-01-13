@@ -8,9 +8,9 @@ export interface Flight {
 }
 
 export interface Trip {
-  inbound: Flight;
+  inbound?: Flight;
   outbound: Flight;
-  tripAmount: number;
+  amount: number;
 }
 
 export interface SearchRequest {

@@ -35,6 +35,35 @@ const url = process.env.APP_URL || "https://ryanair-price-hunter.herokuapp.com";
 export const bot = new Telegraf(TOKEN);
 bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
 
+const exitHandler = async signal => {
+  await bot.telegram.deleteWebhook();
+  console.log(signal);
+  process.exit(0);
+};
+
+process.on("SIGTERM", exitHandler);
+process.on("SIGINT", exitHandler);
+process.on("SIGUSR1", exitHandler);
+process.on("SIGUSR2", exitHandler);
+
+process.on("unhandledRejection", async (reason, promise) => {
+  if (reason && reason instanceof Error) {
+    console.log(reason.message, reason.stack);
+  }
+  await bot.telegram.deleteWebhook();
+  console.log("Unhandled Promise");
+  process.exit(1);
+});
+
+process.on("uncaughtException", async reason => {
+  if (reason && reason instanceof Error) {
+    console.log(reason.message, reason.stack);
+  }
+  await bot.telegram.deleteWebhook();
+  console.log("Unexpected Error");
+  process.exit(1);
+});
+
 const stage = new Stage(
   [
     departureScene,
