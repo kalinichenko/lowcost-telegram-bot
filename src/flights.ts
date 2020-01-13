@@ -16,7 +16,7 @@ import { Trip } from "./types";
 
 export const scanFlights = async () => {
   const subscriptions = await getAllFlightSubscriptions();
-  console.log(subscriptions);
+  // console.log(subscriptions);
   subscriptions.forEach(async (subscription: Subscription) => {
     const subscriptionId = subscription.id;
     const flightPrice = head(
@@ -25,9 +25,9 @@ export const scanFlights = async () => {
       })
     );
 
-    const cheapestFlight: Trip = await getRyanairFlight(subscription);
 
-    console.log(cheapestFlight, cheapestFlight.amount);
+    const cheapestFlight: Trip = await getRyanairFlight(subscription);
+    console.log('updating subscription: ', flightPrice, 'new price: ', cheapestFlight.amount);
 
     if (flightPrice) {
       updateFlightPrice({
@@ -38,7 +38,7 @@ export const scanFlights = async () => {
       if (priceChange > flightPrice.price / 20) {
         notify(subscription, cheapestFlight, flightPrice.price);
       }
-      console.log("priceChange:", priceChange);
+      // console.log("priceChange:", priceChange);
     } else {
       saveFlightPrice({
         price: cheapestFlight.amount,

@@ -63,7 +63,7 @@ const getCheapestTripWithDuration = ({
         },
         {}
       );
-  console.log("getCheapestTripWithDuration:", cheapestFlight);
+  // console.log("getCheapestTripWithDuration:", cheapestFlight);
   return cheapestFlight;
 };
 
@@ -85,7 +85,7 @@ export const getRyanairFlight = async (
     infants
   } = subscription;
 
-  console.log("getRyanairFlight", subscription);
+  // console.log("getRyanairFlight", subscription);
 
   const outbounds = departureDateMax
     ? await getCheapestFlightsForPeriod({
@@ -109,11 +109,11 @@ export const getRyanairFlight = async (
         infants
       });
 
-  console.log("outbounds:", outbounds);
   if (!arrivalDateMin && !durationMin) {
     const outbound = departureDateMax
       ? minBy(outbounds, "amount")
       : head(outbounds);
+    // console.log("outbound:", outbound);
     return {
       outbound,
       amount: outbound.amount
@@ -127,7 +127,7 @@ export const getRyanairFlight = async (
           .format("YYYY-MM-DD")
       : arrivalDateMin;
 
-  console.log("durationMin", durationMin, inboundDateMin);
+  // console.log("durationMin", durationMin, inboundDateMin);
 
   const inboundDateMax =
     !arrivalDateMax && (durationMin || durationMax)
@@ -136,7 +136,7 @@ export const getRyanairFlight = async (
           .format("YYYY-MM-DD")
       : arrivalDateMax;
 
-  console.log("durationMax", durationMax, inboundDateMax);
+  // console.log("durationMax", durationMax, inboundDateMax);
 
   const inbounds = inboundDateMax
     ? await getCheapestFlightsForPeriod({
@@ -160,9 +160,9 @@ export const getRyanairFlight = async (
         infants
       });
 
-  console.log("inbounds:", inbounds);
 
   if (durationMin) {
+    // console.log("inbounds:", inbounds);
     return getCheapestTripWithDuration({
       inbounds: inboundDateMax ? inbounds : [head(inbounds)],
       outbounds: departureDateMax ? outbounds : [head(outbounds)],

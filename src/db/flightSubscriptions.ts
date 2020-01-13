@@ -60,7 +60,7 @@ export const addFlightSubscriptions = async ({
       ]
     );
     client.release();
-    console.log(`flight subscription added: ${get(result, "rows.0.id")}`);
+    // console.log(`flight subscription added: ${get(result, "rows.0.id")}`);
     return result.rows[0].id;
   } catch (err) {
     console.error(err);
@@ -94,9 +94,9 @@ export const getMyFlightSubscriptions = async (
       [chatId]
     );
     client.release();
-    console.log(
-      `flight subscriptions requested: ${get(result, "rows.length")} records`
-    );
+    // console.log(
+    //   `flight subscriptions requested: ${get(result, "rows.length")} records`
+    // );
     return formatSubscriptions(result.rows);
   } catch (err) {
     console.error(err);
@@ -126,9 +126,9 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
         FROM flight_subscriptions`
     );
     client.release();
-    console.log(
-      `flight subscriptions requested: ${JSON.stringify(result.rows)} records`
-    );
+    // console.log(
+    //   `flight subscriptions requested: ${JSON.stringify(result.rows)} records`
+    // );
     return formatSubscriptions(result.rows);
   } catch (err) {
     console.error(err);
@@ -139,7 +139,7 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
 const formatSubscriptions = subsctiptions => {
   return map(subsctiptions, s => {
     const camelCased = objKeysToCamelCase(s);
-    console.log(camelCased);
+    // console.log(camelCased);
 
     return {
       ...camelCased,

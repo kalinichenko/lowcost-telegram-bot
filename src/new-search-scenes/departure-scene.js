@@ -25,13 +25,13 @@ departureScene.enter(ctx => {
 departureScene.on("message", async ctx => {
   const msg = ctx.message.text;
 
-  console.log(msg);
+  // console.log(msg);
   const airports = await getAirports(msg);
-  console.log(airports);
+  // console.log(airports);
   switch (size(airports)) {
     case 1: {
       const airport = head(airports);
-      console.log("airport", airport);
+      // console.log("airport", airport);
       ctx.session.searchParams = {
         departureIataCode: get(airport, "iataCode"),
         departureAirport: get(airport, "airportName")
