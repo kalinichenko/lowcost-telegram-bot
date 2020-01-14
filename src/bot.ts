@@ -6,7 +6,6 @@ const TOKEN = process.env.TELEGRAM_TOKEN;
 import { mainMenuKeyboard } from "./keyboards/main-menu-keyboard";
 import searchRequestFormatter from "./utils/subscriptionFormatter";
 import { map, join, last, split, isEmpty } from "lodash";
-import { removeFlightPrice } from "./db/flightPrices";
 
 import {
   departureScene,
@@ -107,7 +106,6 @@ bot.hears(/^\/remove_subscription_/, ctx => {
 
   if (id) {
     const subscriptionId = parseInt(id, 10);
-    removeFlightPrice(subscriptionId);
     removeFlightSubscriptions(subscriptionId);
     ctx.reply("Subscription removed");
   }

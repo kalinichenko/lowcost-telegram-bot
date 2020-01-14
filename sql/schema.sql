@@ -27,8 +27,9 @@ CREATE TABLE flight_subscriptions (
   infants smallint DEFAULT 0
 );
 
-ALTER TABLE flight_subscriptions ADD COLUMN price numeric(6,2);
-ALTER TABLE flight_subscriptions ADD COLUMN update_date date;
-
+CREATE TABLE flight_prices (
+  subscription_id integer REFERENCES flight_subscriptions (id) PRIMARY KEY,
+  price numeric(6,2) NOT NULL
+);
 
 

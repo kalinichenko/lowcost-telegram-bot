@@ -6,8 +6,10 @@ import { SearchRequest } from "../types";
 import formatDate from "../utils/formatDate";
 
 export interface Subscription extends SearchRequest {
-  id?: Number;
+  id?: number;
   chatId: number;
+  price?: number;
+  updatedAt?: Date;
 }
 
 export const addFlightSubscriptions = async ({
@@ -23,7 +25,8 @@ export const addFlightSubscriptions = async ({
   adults = 1,
   teens = 0,
   children = 0,
-  infants = 0
+  infants = 0,
+  price
 }: Subscription): Promise<number> => {
   try {
     const client = await pool.connect();
@@ -41,8 +44,10 @@ export const addFlightSubscriptions = async ({
           adults,
           teens,
           children,
-          infants)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
+          infants,
+          price,
+          updated_at
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id`,
       [
         chatId,
         departureIataCode,
@@ -56,7 +61,9 @@ export const addFlightSubscriptions = async ({
         adults,
         teens,
         children,
-        infants
+        infants,
+        price,
+        new Date()
       ]
     );
     client.release();
@@ -88,7 +95,9 @@ export const getMyFlightSubscriptions = async (
           adults,
           teens,
           children,
-          infants
+          infants,
+          price,
+          updated_at
         FROM flight_subscriptions
         WHERE chat_id=$1`,
       [chatId]
@@ -101,6 +110,24 @@ export const getMyFlightSubscriptions = async (
   } catch (err) {
     console.error(err);
     throw new Error("Request for flight subscriptions failed");
+  }
+};
+
+export const updateMySubscription = async ({ price, subscriptionId }) => {
+  try {
+    const client = await pool.connect();
+    await client.query(
+      `UPDATE flight_subscriptions
+      SET price=$1,
+      updated_at=$2
+      WHERE id=$3`,
+      [price, new Date(), subscriptionId]
+    );
+    // console.log(`Flight price updated`);
+    client.release();
+  } catch (err) {
+    console.error(err);
+    throw new Error("Update flight price failed");
   }
 };
 
@@ -122,7 +149,9 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
           adults,
           teens,
           children,
-          infants
+          infants,
+          price,
+          updated_at
         FROM flight_subscriptions`
     );
     client.release();
@@ -139,7 +168,6 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
 const formatSubscriptions = subsctiptions => {
   return map(subsctiptions, s => {
     const camelCased = objKeysToCamelCase(s);
-    // console.log(camelCased);
 
     return {
       ...camelCased,

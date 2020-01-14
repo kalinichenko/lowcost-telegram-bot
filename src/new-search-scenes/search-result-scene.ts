@@ -26,6 +26,11 @@ searchResultScene.enter(async ctx => {
 
   const cheapestFlight = await getRyanairFlight(ctx.session.searchParams);
 
+  ctx.session.searchParams = {
+    ...ctx.session.searchParams,
+    price: cheapestFlight.amount
+  };
+
   // console.log('getRyanairFlight', cheapestFlight);
 
   const IS_ROUND_TRIP = arrivalDateMin || durationMin;

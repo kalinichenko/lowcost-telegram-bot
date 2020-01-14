@@ -19,6 +19,6 @@ export default async ({
     `<b>${departureAirportName} (${departureIataCode}) - ${arrivalAirportName} (${arrivalIataCode})</b>\n` +
     `Departure: ${dayjs(departureTime).format("DD.MM HH:mm")}\n` +
     `Arrival: ${dayjs(arrivalTime).format("DD.MM HH:mm")}\n` +
-    `Price: ${amount}\n`
+    `Price: ${amount} EUR\n`
   );
 };

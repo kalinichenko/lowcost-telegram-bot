@@ -1,13 +1,9 @@
 import { head, get } from "lodash";
 import {
   getAllFlightSubscriptions,
-  Subscription
+  Subscription,
+  updateMySubscription
 } from "./db/flightSubscriptions";
-import {
-  getFlightPrice,
-  saveFlightPrice,
-  updateFlightPrice
-} from "./db/flightPrices";
 import { getRyanairFlight } from "./ryanair/availability";
 import getRyanairUrl from "./ryanair/availability/getUrl";
 import flightFormatter from "./utils/flightFormatter";
@@ -18,46 +14,34 @@ export const scanFlights = async () => {
   const subscriptions = await getAllFlightSubscriptions();
   // console.log(subscriptions);
   subscriptions.forEach(async (subscription: Subscription) => {
-    const subscriptionId = subscription.id;
-    const flightPrice = head(
-      await getFlightPrice({
-        subscriptionId
-      })
+    const cheapestFlight: Trip = await getRyanairFlight(subscription);
+    console.log(
+      `updating subscription id: ${subscription.id} new price: ${cheapestFlight.amount}`
     );
 
-
-    const cheapestFlight: Trip = await getRyanairFlight(subscription);
-    console.log('updating subscription: ', flightPrice, 'new price: ', cheapestFlight.amount);
-
-    if (flightPrice) {
-      updateFlightPrice({
-        price: cheapestFlight.amount,
-        subscriptionId
-      });
-      const priceChange = Math.abs(cheapestFlight.amount - flightPrice.price);
-      if (priceChange > flightPrice.price / 20) {
-        notify(subscription, cheapestFlight, flightPrice.price);
-      }
-      // console.log("priceChange:", priceChange);
-    } else {
-      saveFlightPrice({
-        price: cheapestFlight.amount,
-        subscriptionId
-      });
+    updateMySubscription({
+      price: cheapestFlight.amount,
+      subscriptionId: subscription.id
+    });
+    const priceChange = Math.abs(cheapestFlight.amount - subscription.price);
+    if (priceChange > subscription.price / 20) {
+      notify(subscription, cheapestFlight);
     }
+    // console.log("priceChange:", priceChange);
   });
 
   // console.log(subscriptions);
 };
 
-const notify = async (
-  subscription: Subscription,
-  cheapestFlight: Trip,
-  oldPrice: number
-) => {
-  const { chatId, departureIataCode, arrivalIataCode } = subscription;
+const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
+  const {
+    chatId,
+    departureIataCode,
+    arrivalIataCode,
+    price: priceBefore
+  } = subscription;
 
-  const { outbound, inbound, amount } = cheapestFlight;
+  const { outbound, inbound, amount: price } = cheapestFlight;
 
   const departureTime = get(outbound, "dateOut");
   const arrivalTime = get(outbound, "dateOut");
@@ -73,8 +57,9 @@ const notify = async (
   const inboundMessage = inbound ? await flightFormatter(inbound) : "";
 
   const response =
-    `Old price: ${oldPrice}\n` +
-    `New price: ${amount}\n` +
+    `<b>Hey, price has been changed!</b>\n` +
+    `<b>Current price: ${price}EUR</b>\n` +
+    `Price before: ${priceBefore}EUR\n` +
     outboundMessage +
     inboundMessage +
     `Buy ticket <a href="${url}">here</>`;
