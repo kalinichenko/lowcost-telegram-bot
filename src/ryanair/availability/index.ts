@@ -39,7 +39,7 @@ const getCheapestTripWithDuration = ({
           // console.log("possibleInbounds:", possibleInbounds);
 
           const minAmount = get(minBy(possibleInbounds, "amount"), "amount");
-          const amount = minAmount + outbound.amount;
+          const amount = (minAmount + outbound.amount).toFixed(2);
 
           // console.log("minAmount", minAmount);
 
@@ -179,6 +179,6 @@ export const getRyanairFlight = async (
   return {
     outbound,
     inbound,
-    amount: outbound.amount + inbound.amount
+    amount: (outbound.amount + inbound.amount).toFixed(2)
   };
 };

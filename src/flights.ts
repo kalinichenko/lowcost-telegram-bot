@@ -44,7 +44,7 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
   const { outbound, inbound, amount: price } = cheapestFlight;
 
   const departureTime = get(outbound, "dateOut");
-  const arrivalTime = get(outbound, "dateOut");
+  const arrivalTime = get(inbound, "dateOut");
 
   const url = getRyanairUrl({
     departureIataCode,
@@ -57,8 +57,7 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
   const inboundMessage = inbound ? await flightFormatter(inbound) : "";
 
   const response =
-    `<b>Hey, price has been changed!</b>\n` +
-    `<b>Current price: ${price}EUR</b>\n` +
+    `<b>New price alert: ${price}EUR</b>\n` +
     `Price before: ${priceBefore}EUR\n` +
     outboundMessage +
     inboundMessage +
