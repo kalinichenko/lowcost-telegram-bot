@@ -32,7 +32,7 @@ import {
 const url = process.env.APP_URL;
 
 export const bot = new Telegraf(TOKEN);
-bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
+// bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
 
 const exitHandler = async signal => {
   await bot.telegram.deleteWebhook();
