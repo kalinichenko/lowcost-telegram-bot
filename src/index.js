@@ -1,17 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 import { scanFlights } from "./flights";
-// import { bot } from "./bot";
+import { bot } from "./bot";
 
 const url = process.env.APP_URL;
-
-const Telegraf = require("telegraf");
 
 const port = process.env.PORT;
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const app = express();
 
-const bot = new Telegraf(TOKEN);
 bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
 
 app.use(bot.webhookCallback(`/bot${TOKEN}`));
