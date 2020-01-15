@@ -7,12 +7,12 @@ const url = process.env.APP_URL;
 
 const Telegraf = require("telegraf");
 
-const bot = new Telegraf(TOKEN);
-bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
-
 const port = process.env.PORT;
 const TOKEN = process.env.TELEGRAM_TOKEN;
 const app = express();
+
+const bot = new Telegraf(TOKEN);
+bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
 
 app.use(bot.webhookCallback(`/bot${TOKEN}`));
 app.get(`/flights`, async (_, res) => {
