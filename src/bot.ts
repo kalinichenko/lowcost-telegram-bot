@@ -29,7 +29,7 @@ import {
   SUBSCRIPTION_LIST_ACTION
 } from "./actions";
 
-const url = process.env.APP_URL || "https://ryanair-price-hunter.herokuapp.com";
+const url = process.env.APP_URL;
 
 export const bot = new Telegraf(TOKEN);
 bot.telegram.setWebhook(`${url}/bot${TOKEN}`);

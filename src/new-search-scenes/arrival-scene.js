@@ -2,7 +2,7 @@ import { size, head, get } from "lodash";
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 import { ARRIVAL_SCENE, DEPARTURE_DATE_SCENE } from "../scenes";
-import { getAirports } from "../db/airports";
+import { getArrivalAirport } from "../ryanair/routes";
 
 export const arrivalScene = new Scene(ARRIVAL_SCENE);
 arrivalScene.enter(ctx =>
@@ -23,8 +23,9 @@ arrivalScene.enter(ctx =>
 
 arrivalScene.on("message", async ctx => {
   const msg = ctx.message.text;
+  const { departureIataCode } = ctx.session.searchParams;
 
-  const airports = await getAirports(msg);
+  const airports = await getArrivalAirport(departureIataCode, msg);
   switch (size(airports)) {
     case 1: {
       const airport = head(airports);

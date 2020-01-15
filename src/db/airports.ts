@@ -1,13 +1,7 @@
 import { map, first } from "lodash";
 import pool from "./pool";
 import objKeysToCamelCase from "../utils/objKeysToCamelCase";
-
-export interface Airport {
-  airportName: string;
-  iataCode: string;
-  cityName: string;
-  countryName: string;
-}
+import { Airport } from "../types";
 
 export const getAirports = async (name: string): Promise<Airport[]> => {
   try {
@@ -19,7 +13,7 @@ export const getAirports = async (name: string): Promise<Airport[]> => {
         city_name,
         country_name
       FROM airports
-      WHERE LOWER(airport_name) LIKE '%' || $1 || '%' OR LOWER(iata_code) LIKE '%' || $1 || '%'`,
+      WHERE LOWER(airport_name) LIKE '%' || $1 || '%' OR LOWER(iata_code)=$1`,
       [name.toLowerCase()]
     );
     client.release();

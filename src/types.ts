@@ -27,3 +27,10 @@ export interface SearchRequest {
   children?: number;
   infants?: number;
 }
+
+export interface Airport {
+  airportName: string;
+  iataCode: string;
+  cityName: string;
+  countryName: string;
+}
