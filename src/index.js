@@ -5,7 +5,9 @@ import { scanFlights } from "./flights";
 
 const url = process.env.APP_URL;
 
-export const bot = new Telegraf(TOKEN);
+const Telegraf = require("telegraf");
+
+const bot = new Telegraf(TOKEN);
 bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
 
 const port = process.env.PORT;
