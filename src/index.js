@@ -1,33 +1,24 @@
-require("dotenv").config();
+const Telegraf = require("telegraf");
 const express = require("express");
-const bodyParser = require("body-parser");
-import { scanFlights } from "./flights";
-// const getRyanairFlight = require("./src/ryanair/availability");
-import { bot } from "./bot";
+
 const port = process.env.PORT;
 const TOKEN = process.env.TELEGRAM_TOKEN;
+const url = process.env.APP_URL;
+
+const bot = new Telegraf(TOKEN);
+// Set the bot response
+bot.on("text", ({ replyWithHTML }) => replyWithHTML("<b>Hello</b>"));
+
+// Set telegram webhook
+// npm install -g localtunnel && lt --port 3000
+bot.telegram.setWebhook(`${url}/secret-path`);
+
 const app = express();
-app.use(bodyParser.json());
-app.use(bot.webhookCallback(`/bot${TOKEN}`));
-app.get(`/flights`, async (_, res) => {
-  try {
-    await scanFlights();
-    res.sendStatus(200);
-  } catch (e) {
-    res.sendStatus(500, "Refresh flights failed");
-  }
-});
-app.get(`/`, (req, res) => {
-  res.send("Hello World!");
-});
+app.get("/", (req, res) => res.send("Hello World!"));
+// Set the bot API endpoint
+app.use(bot.webhookCallback("/secret-path"));
 app.listen(port, () => {
-  console.log(`Express server is listening on ${port}`);
+  console.log("Example app listening on port 3000!");
 });
-// getRyanairFlight({
-//   origin: "SXF",
-//   destination: "KBP",
-//   departureDateMin: "2020-02-01",
-//   departureDateMax: "2020-02-10",
-//   arrivalDateMin: "2020-02-20",
-//   arrivalDateMax: "2020-02-27"
-// });
+
+// No need to call bot.launch()
