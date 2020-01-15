@@ -117,4 +117,4 @@ const mainMenu = ctx => {
 
 bot.action(MAIN_MENU_ACTION, mainMenu);
 bot.on("message", mainMenu);
-bot.launch();
+// bot.launch();
