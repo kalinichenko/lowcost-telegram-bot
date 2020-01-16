@@ -13,6 +13,7 @@ import { CREATE_PRICE_ALERT_ACTION, MAIN_MENU_ACTION } from "../actions";
 
 import { searchMenuTrackKeyboard } from "../keyboards/search-menu-track-keyboard";
 import { newSearchKeyboard } from "../keyboards/new-search-keyboard";
+import { logger } from "../logger";
 
 export const searchResultScene = new Scene(SEARCH_RESULT_SCENE);
 
@@ -54,6 +55,8 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
   const msg =
     `${await flightFormatter(outbound)}\n` +
     `Buy ticket <a href="${url}">here</>\n`;
+
+  logger.trace("reply message:", msg);
 
   return ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
 };
