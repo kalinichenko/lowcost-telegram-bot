@@ -5,6 +5,7 @@ const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
 import { mainMenuKeyboard } from "./keyboards/main-menu-keyboard";
 import searchRequestFormatter from "./utils/subscriptionFormatter";
+import { logger } from "./logger";
 
 import {
   departureScene,
@@ -20,13 +21,15 @@ import {
   Subscription,
   removeFlightSubscriptions
 } from "./db/flightSubscriptions";
-import { DEPARTURE_SCENE } from "./scenes";
+import { DEPARTURE_SCENE, SEARCH_RESULT_SCENE } from "./scenes";
 
 import {
   NEW_SEARCH_ACTION,
   MAIN_MENU_ACTION,
   SUBSCRIPTION_LIST_ACTION
 } from "./actions";
+
+import { SEARCH_ACTION } from "./actions";
 
 export const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
 
@@ -81,6 +84,11 @@ bot.hears(/^\/remove_subscription_/, ctx => {
 const mainMenu = ctx => {
   return ctx.reply("Welcome to Ryanair bot.", mainMenuKeyboard);
 };
+
+bot.action(SEARCH_ACTION, ctx => {
+  logger.debug("received SEARCH_ACTION action");
+  ctx.scene.enter(SEARCH_RESULT_SCENE);
+});
 
 bot.action(MAIN_MENU_ACTION, mainMenu);
 bot.on("message", mainMenu);

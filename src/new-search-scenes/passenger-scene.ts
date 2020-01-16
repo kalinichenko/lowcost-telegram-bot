@@ -9,7 +9,7 @@ passengersScene.enter(ctx => {
   ctx.replyWithHTML(
     "Type the number of adults/teens/children/infants\n" +
       "e.g: <b>3/2/1</b>\n" +
-      "or simply click the button\n",
+      "or simply click the search button\n",
     searchNowKeyboard
   );
 });
@@ -20,7 +20,6 @@ passengersScene.action(SEARCH_ACTION, ctx => {
     adults: 1
   };
 
-  ctx.scene.leave(PASSENGERS_SCENE);
   ctx.scene.enter(SEARCH_RESULT_SCENE);
 });
 
@@ -36,6 +35,5 @@ passengersScene.on("message", async ctx => {
     infants
   };
 
-  ctx.scene.leave(PASSENGERS_SCENE);
   ctx.scene.enter(SEARCH_RESULT_SCENE);
 });

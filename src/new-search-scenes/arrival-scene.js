@@ -5,21 +5,14 @@ import { ARRIVAL_SCENE, DEPARTURE_DATE_SCENE } from "../scenes";
 import { getArrivalAirport } from "../ryanair/routes";
 
 export const arrivalScene = new Scene(ARRIVAL_SCENE);
+
 arrivalScene.enter(ctx =>
-  ctx.reply("Type the airport of arrival", {
+  ctx.replyWithHTML("Type the <b>arrival</b> airport name", {
     reply_markup: {
       remove_keyboard: true
-      // keyboard: [["◀️ back"]],
-      // resize_keyboard: true,
-      // one_time_keyboard: true
     }
   })
 );
-
-// arrivalScene.hears("◀️ back", ctx => {
-//   ctx.scene.leave("arrival");
-//   ctx.scene.enter("search");
-// });
 
 arrivalScene.on("message", async ctx => {
   const msg = ctx.message.text;
@@ -35,7 +28,6 @@ arrivalScene.on("message", async ctx => {
         arrivalAirport: get(airport, "airportName")
       };
 
-      ctx.scene.leave(ARRIVAL_SCENE);
       ctx.scene.enter(DEPARTURE_DATE_SCENE);
       break;
     }

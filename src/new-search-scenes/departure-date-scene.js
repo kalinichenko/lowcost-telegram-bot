@@ -5,23 +5,16 @@ import { parseDateRange } from "../utils/parseDateRange";
 
 export const departureDateScene = new Scene(DEPARTURE_DATE_SCENE);
 departureDateScene.enter(ctx =>
-  ctx.reply(
-    "Enter departure date or range of dates (e.g 29.02 or 29.02-07.03)",
+  ctx.replyWithHTML(
+    "Enter a <b>departure date</b> or a period\n" +
+      "(e.g 29.02 or 29.02-07.03)\n",
     {
       reply_markup: {
         remove_keyboard: true
-        //   keyboard: [["◀️ back"]],
-        //   resize_keyboard: true,
-        //   one_time_keyboard: true
       }
     }
   )
 );
-
-// arrivalScene.hears("◀️ back", ctx => {
-//   ctx.scene.leave("arrival");
-//   ctx.scene.enter("search");
-// });
 
 departureDateScene.on("message", async ctx => {
   const msg = ctx.message.text;
@@ -45,6 +38,6 @@ departureDateScene.on("message", async ctx => {
     departureDateMin: formatDate(departureDateMin),
     departureDateMax: formatDate(departureDateMax)
   };
-  ctx.scene.leave(DEPARTURE_DATE_SCENE);
+
   ctx.scene.enter(ARRIVAL_DATE_SCENE);
 });

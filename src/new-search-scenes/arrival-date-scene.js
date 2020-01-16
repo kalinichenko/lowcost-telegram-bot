@@ -1,37 +1,22 @@
 import { includes, split, parseInt } from "lodash";
 import formatDate from "../utils/formatDate";
 const Scene = require("telegraf/scenes/base");
-import {
-  ARRIVAL_DATE_SCENE,
-  SEARCH_RESULT_SCENE,
-  PASSENGERS_SCENE
-} from "../scenes";
+import { ARRIVAL_DATE_SCENE, PASSENGERS_SCENE } from "../scenes";
 import { parseDateRange } from "../utils/parseDateRange";
 import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
-import { SEARCH_ACTION } from "../actions";
-import { logger } from "../logger";
 
 export const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
 
-arrivalDateScene.action(SEARCH_ACTION, ctx => {
-  logger.debug("received SEARCH_ACTION action");
-  ctx.scene.leave(ARRIVAL_DATE_SCENE);
-  ctx.scene.enter(SEARCH_RESULT_SCENE);
-});
-
 arrivalDateScene.enter(ctx =>
-  ctx.reply(
-    "Enter arival date or range of dates (e.g 29.02 or 29.02-07.03)" +
-      "or trip duration or its range (e.g 7 or 7-14)" +
-      "or click Search Now button for one way trip",
+  ctx.replyWithHTML(
+    "Enter an <b>arival date</b> or a period\n" +
+      "(e.g 29.02 or 29.02-07.03)\n" +
+      "or a trip duration or a range\n" +
+      "(e.g 7 or 7-14)\n" +
+      "or click Search Now button for <b>one way trip</b>",
     searchNowKeyboard
   )
 );
-
-// arrivalScene.hears("◀️ back", ctx => {
-//   ctx.scene.leave("arrival");
-//   ctx.scene.enter("search");
-// });
 
 arrivalDateScene.on("message", async ctx => {
   const msg = ctx.message.text;
@@ -67,6 +52,5 @@ arrivalDateScene.on("message", async ctx => {
     };
   }
 
-  ctx.scene.leave(ARRIVAL_DATE_SCENE);
   ctx.scene.enter(PASSENGERS_SCENE);
 });
