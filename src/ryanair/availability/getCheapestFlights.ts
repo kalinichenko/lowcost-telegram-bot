@@ -4,9 +4,10 @@ import { get, isEmpty, reduce, minBy } from "lodash";
 import { Flight } from "../../types";
 
 import { getQueryParams } from "./getQueryParams";
+import { logger } from "../../logger";
 
-const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) =>
-  reduce(
+const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) => {
+  const cheapestFlights = reduce(
     dates,
     (acc, date) => {
       if (!isEmpty(date.flights)) {
@@ -28,14 +29,18 @@ const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) =>
     },
     []
   );
+  logger.debug("cheapest flights from reponse:", cheapestFlights);
+  return cheapestFlights;
+};
 
 export const getCheapestFlights = props => {
   const params = getQueryParams(props);
-  // console.log(
-  //   `https://www.ryanair.com/api/booking/v4/en-gb/availability?${querystring.stringify(
-  //     params
-  //   )}`
-  // );
+  logger.trace(
+    "requesting endpoint:",
+    `https://www.ryanair.com/api/booking/v4/en-gb/availability?${querystring.stringify(
+      params
+    )}`
+  );
 
   return axios
     .get("https://www.ryanair.com/api/booking/v4/en-gb/availability", {
@@ -46,6 +51,8 @@ export const getCheapestFlights = props => {
       }
     })
     .then(resp => {
+      logger.trace("raw response:", resp.data);
+
       const dates = get(resp.data, "trips.0.dates");
 
       return findCheapestFlights({

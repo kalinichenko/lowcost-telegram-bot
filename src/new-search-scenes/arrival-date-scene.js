@@ -9,10 +9,12 @@ import {
 import { parseDateRange } from "../utils/parseDateRange";
 import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
 import { SEARCH_ACTION } from "../actions";
+import { logger } from "../logger";
 
 export const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
 
 arrivalDateScene.action(SEARCH_ACTION, ctx => {
+  logger.debug("received SEARCH_ACTION action");
   ctx.scene.leave(ARRIVAL_DATE_SCENE);
   ctx.scene.enter(SEARCH_RESULT_SCENE);
 });

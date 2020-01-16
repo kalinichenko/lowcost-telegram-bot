@@ -5,6 +5,7 @@ import { getCheapestFlightsForPeriod } from "./getCheapestFlightsForPeriod";
 import { getCheapestFlights } from "./getCheapestFlights";
 import { Trip, Flight } from "../../types";
 import { Subscription } from "../../db/flightSubscriptions";
+import { logger } from "../../logger";
 
 const DAY = 1000 * 3600 * 24;
 
@@ -85,7 +86,7 @@ export const getRyanairFlight = async (
     infants
   } = subscription;
 
-  // console.log("getRyanairFlight", subscription);
+  logger.debug("requesting flights with parameters:", subscription);
 
   const outbounds = departureDateMax
     ? await getCheapestFlightsForPeriod({
@@ -113,11 +114,12 @@ export const getRyanairFlight = async (
     const outbound = departureDateMax
       ? minBy(outbounds, "amount")
       : head(outbounds);
-    // console.log("outbound:", outbound);
-    return {
+    const trip = {
       outbound,
       amount: outbound.amount
     };
+    logger.debug("trip:", trip);
+    return trip;
   }
 
   const inboundDateMin =
@@ -160,15 +162,15 @@ export const getRyanairFlight = async (
         infants
       });
 
-
   if (durationMin) {
-    // console.log("inbounds:", inbounds);
-    return getCheapestTripWithDuration({
+    const trip = getCheapestTripWithDuration({
       inbounds: inboundDateMax ? inbounds : [head(inbounds)],
       outbounds: departureDateMax ? outbounds : [head(outbounds)],
       durationMin,
       durationMax
     });
+    logger.debug("trip:", trip);
+    return trip;
   }
 
   const outbound = departureDateMax
@@ -176,9 +178,12 @@ export const getRyanairFlight = async (
     : head(outbounds);
   const inbound = inboundDateMax ? minBy(inbounds, "amount") : head(inbounds);
 
-  return {
+  const trip = {
     outbound,
     inbound,
     amount: (outbound.amount + inbound.amount).toFixed(2)
   };
+
+  logger.debug("trip:", trip);
+  return trip;
 };

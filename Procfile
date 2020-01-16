@@ -1,1 +1,1 @@
-web: node build/index.js
+web: node build/index.js | ./node_modules/.bin/pino-pretty
