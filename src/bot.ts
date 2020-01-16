@@ -1,11 +1,10 @@
 process.env.NTBA_FIX_319 = "1";
+import { map, join, last, split, isEmpty } from "lodash";
 const Telegraf = require("telegraf");
 const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
-const TOKEN = process.env.TELEGRAM_TOKEN;
 import { mainMenuKeyboard } from "./keyboards/main-menu-keyboard";
 import searchRequestFormatter from "./utils/subscriptionFormatter";
-import { map, join, last, split, isEmpty } from "lodash";
 
 import {
   departureScene,
@@ -29,39 +28,7 @@ import {
   SUBSCRIPTION_LIST_ACTION
 } from "./actions";
 
-const url = process.env.APP_URL;
-
-export const bot = new Telegraf(TOKEN);
-// bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
-
-const exitHandler = async signal => {
-  await bot.telegram.deleteWebhook();
-  console.log(signal);
-  process.exit(0);
-};
-
-process.on("SIGTERM", exitHandler);
-process.on("SIGINT", exitHandler);
-process.on("SIGUSR1", exitHandler);
-process.on("SIGUSR2", exitHandler);
-
-process.on("unhandledRejection", async (reason, promise) => {
-  if (reason && reason instanceof Error) {
-    console.log(reason.message, reason.stack);
-  }
-  await bot.telegram.deleteWebhook();
-  console.log("Unhandled Promise");
-  process.exit(1);
-});
-
-process.on("uncaughtException", async reason => {
-  if (reason && reason instanceof Error) {
-    console.log(reason.message, reason.stack);
-  }
-  await bot.telegram.deleteWebhook();
-  console.log("Unexpected Error");
-  process.exit(1);
-});
+export const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
 
 const stage = new Stage(
   [
@@ -117,4 +84,3 @@ const mainMenu = ctx => {
 
 bot.action(MAIN_MENU_ACTION, mainMenu);
 bot.on("message", mainMenu);
-// bot.launch();

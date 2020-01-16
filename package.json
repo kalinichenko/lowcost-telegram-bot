@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "postinstall": "npm run build",
-    "start": "nodemon -e js,ts -w src -x 'npx tsc && node build/index.js'"
+    "start": "nodemon -e js,ts -w src -x 'npx tsc && node build/standalone-bot.js'"
   },
   "author": "",
   "license": "ISC",
