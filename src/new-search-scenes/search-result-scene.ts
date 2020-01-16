@@ -58,7 +58,8 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
 
   logger.trace("reply message:", msg);
 
-  return ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
+  // return ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
+  return ctx.reply(msg);
 };
 
 const replyWithRoundTripMessage = async (ctx, outbound, inbound) => {
