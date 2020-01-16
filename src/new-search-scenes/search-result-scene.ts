@@ -24,6 +24,8 @@ searchResultScene.action(MAIN_MENU_ACTION, ctx =>
 searchResultScene.enter(async ctx => {
   const { arrivalDateMin, durationMin } = ctx.session.searchParams;
 
+  ctx.reply("loading results ...");
+
   const cheapestFlight = await getRyanairFlight(ctx.session.searchParams);
 
   ctx.session.searchParams = {
@@ -60,7 +62,6 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
 
   logger.trace("reply message:", msg);
 
-  ctx.reply("noop");
   ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
 };
 
