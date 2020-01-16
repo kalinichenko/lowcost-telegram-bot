@@ -33,13 +33,15 @@ searchResultScene.enter(async ctx => {
 
   const IS_ROUND_TRIP = arrivalDateMin || durationMin;
 
-  return IS_ROUND_TRIP
-    ? await replyWithRoundTripMessage(
-        ctx,
-        get(cheapestFlight, "outbound"),
-        get(cheapestFlight, "inbound")
-      )
-    : await replyWithOneWayTripMessage(ctx, get(cheapestFlight, "outbound"));
+  if (IS_ROUND_TRIP) {
+    replyWithRoundTripMessage(
+      ctx,
+      get(cheapestFlight, "outbound"),
+      get(cheapestFlight, "inbound")
+    );
+  } else {
+    replyWithOneWayTripMessage(ctx, get(cheapestFlight, "outbound"));
+  }
 });
 
 const replyWithOneWayTripMessage = async (ctx, outbound) => {
@@ -58,8 +60,7 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
 
   logger.trace("reply message:", msg);
 
-  // return ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
-  return ctx.reply(msg);
+  ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
 };
 
 const replyWithRoundTripMessage = async (ctx, outbound, inbound) => {
