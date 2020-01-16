@@ -26,13 +26,10 @@ searchResultScene.enter(async ctx => {
 
   const cheapestFlight = await getRyanairFlight(ctx.session.searchParams);
 
-  ctx.reply("111");
-
   ctx.session.searchParams = {
     ...ctx.session.searchParams,
     price: cheapestFlight.amount
   };
-  ctx.reply("222");
 
   const IS_ROUND_TRIP = arrivalDateMin || durationMin;
 
@@ -48,7 +45,6 @@ searchResultScene.enter(async ctx => {
 });
 
 const replyWithOneWayTripMessage = async (ctx, outbound) => {
-  ctx.reply("333");
   if (!outbound) {
     return ctx.replyWithHTML("No flight found", newSearchKeyboard);
   }
@@ -64,6 +60,7 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
 
   logger.trace("reply message:", msg);
 
+  ctx.reply("noop");
   ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
 };
 
