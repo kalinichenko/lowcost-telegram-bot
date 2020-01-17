@@ -17,7 +17,6 @@ const scanPrices = (departureDateMin, departureDateMax) => {
       departureDate,
       flexDays
     });
-    // console.log(departureDate, flexDays);
     current = current + flexDays * DAY;
   }
   return res;

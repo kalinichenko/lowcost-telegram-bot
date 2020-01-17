@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 import { scanFlights } from "./flights";
 import { bot } from "./bot";
+import { logger } from "./logger";
 
 const { APP_URL, PORT, TELEGRAM_TOKEN } = process.env;
 
@@ -25,5 +26,5 @@ app.get(`/`, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Express server is listening on ${PORT}`);
+  logger.info(`Express server is listening on ${PORT}`);
 });

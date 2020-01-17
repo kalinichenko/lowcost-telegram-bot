@@ -17,7 +17,6 @@ export const getAirports = async (name: string): Promise<Airport[]> => {
       [name.toLowerCase()]
     );
     client.release();
-    // console.log(`airports requested: ${result.rows.length} records`);
     return map(result.rows, objKeysToCamelCase);
   } catch (err) {
     console.error(err);
@@ -41,7 +40,6 @@ export const getAirportByIataCode = async (
       [iataCode.toLowerCase()]
     );
     client.release();
-    // console.log(`airports requested: ${result.rows.length} records`);
     return objKeysToCamelCase(first(result.rows));
   } catch (err) {
     console.error(err);

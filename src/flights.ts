@@ -9,13 +9,14 @@ import getRyanairUrl from "./ryanair/availability/getUrl";
 import flightFormatter from "./utils/flightFormatter";
 import { bot } from "./bot";
 import { Trip } from "./types";
+import { logger } from "./logger";
 
 export const scanFlights = async () => {
   const subscriptions = await getAllFlightSubscriptions();
-  // console.log(subscriptions);
+
   subscriptions.forEach(async (subscription: Subscription) => {
     const cheapestFlight: Trip = await getRyanairFlight(subscription);
-    console.log(
+    logger.info(
       `updating subscription id: ${subscription.id} new price: ${cheapestFlight.amount}`
     );
 
@@ -27,10 +28,7 @@ export const scanFlights = async () => {
     if (priceChange > subscription.price / 20) {
       notify(subscription, cheapestFlight);
     }
-    // console.log("priceChange:", priceChange);
   });
-
-  // console.log(subscriptions);
 };
 
 const notify = async (subscription: Subscription, cheapestFlight: Trip) => {

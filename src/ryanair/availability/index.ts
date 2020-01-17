@@ -22,14 +22,8 @@ const getCheapestTripWithDuration = ({
         (acc: Trip, outbound: Flight) => {
           const minInboundTime = outbound.dateOut.getTime() + DAY * durationMin;
           const maxInboundTime =
-            outbound.dateOut.getTime() + DAY * (durationMax + 1);
-
-          // console.log(
-          //   "minInboundTime:",
-          //   minInboundTime,
-          //   "maxInboundTime",
-          //   maxInboundTime
-          // );
+            outbound.dateOut.getTime() +
+            DAY * ((durationMax || durationMin) + 1);
 
           const possibleInbounds = filter(inbounds, inbound => {
             const inboundTime = new Date(inbound.departureTime).getTime();
@@ -37,12 +31,9 @@ const getCheapestTripWithDuration = ({
               inboundTime >= minInboundTime && inboundTime < maxInboundTime
             );
           });
-          // console.log("possibleInbounds:", possibleInbounds);
 
           const minAmount = get(minBy(possibleInbounds, "amount"), "amount");
           const amount = (minAmount + outbound.amount).toFixed(2);
-
-          // console.log("minAmount", minAmount);
 
           if (!acc.amount || acc.amount > amount) {
             const inbound = find(inbounds, inbound => {
@@ -64,7 +55,6 @@ const getCheapestTripWithDuration = ({
         },
         {}
       );
-  // console.log("getCheapestTripWithDuration:", cheapestFlight);
   return cheapestFlight;
 };
 
@@ -129,16 +119,20 @@ export const getRyanairFlight = async (
           .format("YYYY-MM-DD")
       : arrivalDateMin;
 
-  // console.log("durationMin", durationMin, inboundDateMin);
+  if (inboundDateMin) {
+    logger.trace("inboundDateMin", inboundDateMin);
+  }
 
   const inboundDateMax =
-    !arrivalDateMax && (durationMin || durationMax)
+    !arrivalDateMax && (durationMax || (departureDateMax && durationMin))
       ? dayjs(departureDateMax || departureDateMin)
           .add(durationMax || durationMin, "day")
           .format("YYYY-MM-DD")
       : arrivalDateMax;
 
-  // console.log("durationMax", durationMax, inboundDateMax);
+  if (inboundDateMax) {
+    logger.debug("inboundDateMax", inboundDateMax);
+  }
 
   const inbounds = inboundDateMax
     ? await getCheapestFlightsForPeriod({
@@ -162,10 +156,10 @@ export const getRyanairFlight = async (
         infants
       });
 
-  if (durationMin) {
+  if (departureDateMax || durationMax) {
     const trip = getCheapestTripWithDuration({
-      inbounds: inboundDateMax ? inbounds : [head(inbounds)],
       outbounds: departureDateMax ? outbounds : [head(outbounds)],
+      inbounds: inboundDateMax ? inbounds : [head(inbounds)],
       durationMin,
       durationMax
     });

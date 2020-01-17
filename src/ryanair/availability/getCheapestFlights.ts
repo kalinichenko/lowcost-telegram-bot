@@ -64,8 +64,8 @@ export const getCheapestFlights = props => {
     .catch(error => {
       const { status } = error.response;
       if (status !== 404) {
-        console.log("errors:", error);
-        console.error("params:", params);
+        logger.error("errors:", error);
+        logger.error("params:", params);
       }
       return [];
     });
