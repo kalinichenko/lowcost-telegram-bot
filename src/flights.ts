@@ -2,7 +2,8 @@ import { head, get } from "lodash";
 import {
   getAllFlightSubscriptions,
   Subscription,
-  updateMySubscription
+  updateMySubscription,
+  removeFlightSubscriptionByChatId
 } from "./db/flightSubscriptions";
 import { getRyanairFlight } from "./ryanair/availability";
 import getRyanairUrl from "./ryanair/availability/getUrl";
@@ -60,5 +61,12 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     outboundMessage +
     inboundMessage +
     `Buy ticket <a href="${url}">here</>`;
-  bot.telegram.sendMessage(chatId, response, { parse_mode: "HTML" });
+  try {
+    await bot.telegram.sendMessage(chatId, response, { parse_mode: "HTML" });
+  } catch (e) {
+    if (e.code === 403) {
+      removeFlightSubscriptionByChatId(chatId);
+    }
+    logger.error(e);
+  }
 };

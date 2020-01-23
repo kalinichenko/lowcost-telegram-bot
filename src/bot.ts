@@ -19,7 +19,7 @@ import {
 import {
   getMyFlightSubscriptions,
   Subscription,
-  removeFlightSubscriptions
+  removeFlightSubscriptionById
 } from "./db/flightSubscriptions";
 import { DEPARTURE_SCENE, SEARCH_RESULT_SCENE } from "./scenes";
 
@@ -76,7 +76,7 @@ bot.hears(/^\/remove_subscription_/, ctx => {
 
   if (id) {
     const subscriptionId = parseInt(id, 10);
-    removeFlightSubscriptions(subscriptionId);
+    removeFlightSubscriptionById(subscriptionId);
     ctx.reply("Subscription removed");
   }
 });

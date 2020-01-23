@@ -171,7 +171,7 @@ const formatSubscriptions = subsctiptions => {
   });
 };
 
-export const removeFlightSubscriptions = async (id: number) => {
+export const removeFlightSubscriptionById = async (id: number) => {
   try {
     const client = await pool.connect();
     await client.query(
@@ -179,6 +179,22 @@ export const removeFlightSubscriptions = async (id: number) => {
         FROM flight_subscriptions
         WHERE id=$1`,
       [id]
+    );
+    client.release();
+  } catch (err) {
+    console.error(err);
+    throw new Error("Request for flight subscriptions removal failed");
+  }
+};
+
+export const removeFlightSubscriptionByChatId = async (chatId: number) => {
+  try {
+    const client = await pool.connect();
+    await client.query(
+      `DELETE
+        FROM flight_subscriptions
+        WHERE chat_id=$1`,
+      [chatId]
     );
     client.release();
   } catch (err) {
