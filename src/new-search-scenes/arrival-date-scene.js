@@ -7,7 +7,7 @@ import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
 
 export const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
 
-arrivalDateScene.enter(ctx =>
+arrivalDateScene.enter((ctx) =>
   ctx.replyWithHTML(
     "Enter an <b>arival date</b> or a period\n" +
       "(e.g 29.02 or 29.02-07.03)\n" +
@@ -18,7 +18,7 @@ arrivalDateScene.enter(ctx =>
   )
 );
 
-arrivalDateScene.on("message", async ctx => {
+arrivalDateScene.on("message", async (ctx) => {
   const msg = ctx.message.text;
 
   if (!includes(msg, ".")) {
@@ -26,7 +26,7 @@ arrivalDateScene.on("message", async ctx => {
     ctx.session.searchParams = {
       ...ctx.session.searchParams,
       durationMin: durationMin && parseInt(durationMin, 10),
-      durationMax: durationMax && parseInt(durationMax, 10)
+      durationMax: durationMax && parseInt(durationMax, 10),
     };
   } else {
     const [arrivalDateMin, arrivalDateMax] = parseDateRange(msg);
@@ -47,8 +47,8 @@ arrivalDateScene.on("message", async ctx => {
     }
     ctx.session.searchParams = {
       ...ctx.session.searchParams,
-      arrivalDateMin: formatDate(arrivalDateMin),
-      arrivalDateMax: formatDate(arrivalDateMax)
+      arrivalDateMin: formatDate(arrivalDapteMin),
+      arrivalDateMax: formatDate(arrivalDateMax),
     };
   }
 

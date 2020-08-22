@@ -1,7 +1,6 @@
-import { has } from "lodash";
 import { Pool } from "pg";
 
-const ssl = has(process.env, "DATABASE_SSL")
+const ssl = process.env.hasOwnProperty("DATABASE_SSL")
   ? process.env.DATABASE_SSL === "true"
   : true;
 
@@ -10,5 +9,5 @@ export default new Pool({
   ssl,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000
+  connectionTimeoutMillis: 2000,
 });

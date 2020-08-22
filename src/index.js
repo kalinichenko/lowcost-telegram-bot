@@ -26,5 +26,5 @@ app.get(`/`, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  logger.info(`Express server is listening on ${PORT}`);
+  logger.info("Express server is listening on %s", PORT);
 });

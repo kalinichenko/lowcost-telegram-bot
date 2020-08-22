@@ -3,7 +3,7 @@ import {
   getAllFlightSubscriptions,
   Subscription,
   updateMySubscription,
-  removeFlightSubscriptionByChatId
+  removeFlightSubscriptionByChatId,
 } from "./db/flightSubscriptions";
 import { getRyanairFlight } from "./ryanair/availability";
 import getRyanairUrl from "./ryanair/availability/getUrl";
@@ -18,12 +18,14 @@ export const scanFlights = async () => {
   subscriptions.forEach(async (subscription: Subscription) => {
     const cheapestFlight: Trip = await getRyanairFlight(subscription);
     logger.info(
-      `updating subscription id: ${subscription.id} new price: ${cheapestFlight.amount}`
+      "updating subscription id: %s new price: %s",
+      subscription.id,
+      cheapestFlight.amount
     );
 
     updateMySubscription({
       price: cheapestFlight.amount,
-      subscriptionId: subscription.id
+      subscriptionId: subscription.id,
     });
     const priceChange = Math.abs(cheapestFlight.amount - subscription.price);
     if (priceChange > subscription.price / 20) {
@@ -37,7 +39,7 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     chatId,
     departureIataCode,
     arrivalIataCode,
-    price: priceBefore
+    price: priceBefore,
   } = subscription;
 
   const { outbound, inbound, amount: price } = cheapestFlight;
@@ -49,7 +51,7 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     departureIataCode,
     arrivalIataCode,
     departureTime,
-    arrivalTime
+    arrivalTime,
   });
 
   const outboundMessage = outbound ? await flightFormatter(outbound) : "";

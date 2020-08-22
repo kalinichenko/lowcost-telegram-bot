@@ -11,7 +11,7 @@ const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) => {
     dates,
     (acc, date) => {
       if (!isEmpty(date.flights)) {
-        const cheapestFlight = minBy(date.flights, f =>
+        const cheapestFlight = minBy(date.flights, (f) =>
           get(f.regularFare, "fares.0.amount")
         );
 
@@ -21,7 +21,7 @@ const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) => {
           arrivalTime: get(cheapestFlight, "time.1"),
           departureIataCode,
           arrivalIataCode,
-          dateOut: new Date(date.dateOut)
+          dateOut: new Date(date.dateOut),
         };
         acc.push(flight);
       }
@@ -29,14 +29,14 @@ const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) => {
     },
     []
   );
-  logger.debug("cheapest flights from reponse:", cheapestFlights);
+  logger.debug("cheapest flights from reponse: %o", cheapestFlights);
   return cheapestFlights;
 };
 
-export const getCheapestFlights = props => {
+export const getCheapestFlights = (props) => {
   const params = getQueryParams(props);
   logger.trace(
-    "requesting endpoint:",
+    "requesting endpoint: %s",
     `https://www.ryanair.com/api/booking/v4/en-gb/availability?${querystring.stringify(
       params
     )}`
@@ -47,25 +47,25 @@ export const getCheapestFlights = props => {
       params,
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"
-      }
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36",
+      },
     })
-    .then(resp => {
-      logger.trace("raw response:", resp.data);
+    .then((resp) => {
+      logger.trace("raw response: %o", resp.data);
 
       const dates = get(resp.data, "trips.0.dates");
 
       return findCheapestFlights({
         dates,
         arrivalIataCode: props.arrivalIataCode,
-        departureIataCode: props.departureIataCode
+        departureIataCode: props.departureIataCode,
       });
     })
-    .catch(error => {
+    .catch((error) => {
       const { status } = error.response;
       if (status !== 404) {
-        logger.error("errors:", error);
-        logger.error("params:", params);
+        logger.error("errors: %o", error);
+        logger.error("params: %o", params);
       }
       return [];
     });

@@ -13,7 +13,7 @@ const getCheapestTripWithDuration = ({
   inbounds,
   outbounds,
   durationMin,
-  durationMax
+  durationMax,
 }): Promise<Trip> => {
   const cheapestFlight = isEmpty(inbounds)
     ? { outbound: minBy(outbounds, "amount") }
@@ -25,7 +25,7 @@ const getCheapestTripWithDuration = ({
             outbound.dateOut.getTime() +
             DAY * ((durationMax || durationMin) + 1);
 
-          const possibleInbounds = filter(inbounds, inbound => {
+          const possibleInbounds = filter(inbounds, (inbound) => {
             const inboundTime = new Date(inbound.departureTime).getTime();
             return (
               inboundTime >= minInboundTime && inboundTime < maxInboundTime
@@ -36,7 +36,7 @@ const getCheapestTripWithDuration = ({
           const amount = (minAmount + outbound.amount).toFixed(2);
 
           if (!acc.amount || acc.amount > amount) {
-            const inbound = find(inbounds, inbound => {
+            const inbound = find(inbounds, (inbound) => {
               const inboundTime = new Date(inbound.departureTime).getTime();
               return (
                 inboundTime >= minInboundTime &&
@@ -48,7 +48,7 @@ const getCheapestTripWithDuration = ({
             return {
               inbound,
               outbound,
-              amount
+              amount,
             };
           }
           return acc;
@@ -73,10 +73,10 @@ export const getRyanairFlight = async (
     adults,
     teens,
     children,
-    infants
+    infants,
   } = subscription;
 
-  logger.debug("requesting flights with parameters:", subscription);
+  logger.debug("requesting flights with parameters: %o", subscription);
 
   const outbounds = departureDateMax
     ? await getCheapestFlightsForPeriod({
@@ -87,7 +87,7 @@ export const getRyanairFlight = async (
         adults,
         teens,
         children,
-        infants
+        infants,
       })
     : await getCheapestFlights({
         departureIataCode,
@@ -97,7 +97,7 @@ export const getRyanairFlight = async (
         adults,
         teens,
         children,
-        infants
+        infants,
       });
 
   if (!arrivalDateMin && !durationMin) {
@@ -106,21 +106,19 @@ export const getRyanairFlight = async (
       : head(outbounds);
     const trip = {
       outbound,
-      amount: outbound.amount
+      amount: outbound.amount,
     };
-    logger.debug("trip:", trip);
+    logger.debug("trip: %o", trip);
     return trip;
   }
 
   const inboundDateMin =
     !arrivalDateMin && durationMin
-      ? dayjs(departureDateMin)
-          .add(durationMin, "day")
-          .format("YYYY-MM-DD")
+      ? dayjs(departureDateMin).add(durationMin, "day").format("YYYY-MM-DD")
       : arrivalDateMin;
 
   if (inboundDateMin) {
-    logger.trace("inboundDateMin", inboundDateMin);
+    logger.trace("inboundDateMin: %s", inboundDateMin);
   }
 
   const inboundDateMax =
@@ -131,7 +129,7 @@ export const getRyanairFlight = async (
       : arrivalDateMax;
 
   if (inboundDateMax) {
-    logger.debug("inboundDateMax", inboundDateMax);
+    logger.debug("inboundDateMax: %s", inboundDateMax);
   }
 
   const inbounds = inboundDateMax
@@ -143,7 +141,7 @@ export const getRyanairFlight = async (
         adults,
         teens,
         children,
-        infants
+        infants,
       })
     : await getCheapestFlights({
         departureIataCode: arrivalIataCode,
@@ -153,7 +151,7 @@ export const getRyanairFlight = async (
         adults,
         teens,
         children,
-        infants
+        infants,
       });
 
   if (departureDateMax || durationMax) {
@@ -161,7 +159,7 @@ export const getRyanairFlight = async (
       outbounds: departureDateMax ? outbounds : [head(outbounds)],
       inbounds: inboundDateMax ? inbounds : [head(inbounds)],
       durationMin,
-      durationMax
+      durationMax,
     });
     logger.debug("trip:", trip);
     return trip;
@@ -175,7 +173,7 @@ export const getRyanairFlight = async (
   const trip = {
     outbound,
     inbound,
-    amount: (outbound.amount + inbound.amount).toFixed(2)
+    amount: (outbound.amount + inbound.amount).toFixed(2),
   };
 
   logger.debug("trip:", trip);
