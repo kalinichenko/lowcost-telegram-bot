@@ -1,6 +1,6 @@
-# [LowcostHunterBot](https://t.me/RyanairPriceBot)
+# [LowcostTelegramBot](https://t.me/RyanairPriceBot)
 
-LowcostHunterBot is a telegram bot for those who are looking for the cheapest flight currently from Ryanair only. 
+LowcostTelegramBot is a telegram bot for those who are looking for the cheapest flight currently from Ryanair only. 
 
 **Features:**
 
