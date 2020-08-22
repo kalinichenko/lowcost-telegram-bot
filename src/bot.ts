@@ -13,20 +13,20 @@ import {
   departureDateScene,
   arrivalDateScene,
   searchResultScene,
-  passengersScene
+  passengersScene,
 } from "./new-search-scenes";
 
 import {
   getMyFlightSubscriptions,
   Subscription,
-  removeFlightSubscriptionById
+  removeFlightSubscriptionById,
 } from "./db/flightSubscriptions";
 import { DEPARTURE_SCENE, SEARCH_RESULT_SCENE } from "./scenes";
 
 import {
   NEW_SEARCH_ACTION,
   MAIN_MENU_ACTION,
-  SUBSCRIPTION_LIST_ACTION
+  SUBSCRIPTION_LIST_ACTION,
 } from "./actions";
 
 import { SEARCH_ACTION } from "./actions";
@@ -40,17 +40,17 @@ const stage = new Stage(
     departureDateScene,
     arrivalDateScene,
     searchResultScene,
-    passengersScene
+    passengersScene,
   ],
   {
-    ttl: 100
+    ttl: 100,
   }
 );
 bot.use(session());
 bot.use(stage.middleware());
 
-bot.action(NEW_SEARCH_ACTION, ctx => ctx.scene.enter(DEPARTURE_SCENE));
-bot.action(SUBSCRIPTION_LIST_ACTION, async ctx => {
+bot.action(NEW_SEARCH_ACTION, (ctx) => ctx.scene.enter(DEPARTURE_SCENE));
+bot.action(SUBSCRIPTION_LIST_ACTION, async (ctx) => {
   const chatId = ctx.chat.id;
   const subscriptionList: Subscription[] = await getMyFlightSubscriptions(
     chatId
@@ -58,7 +58,7 @@ bot.action(SUBSCRIPTION_LIST_ACTION, async ctx => {
   if (!isEmpty(subscriptionList)) {
     const msg = join(
       await Promise.all(
-        map(subscriptionList, s => {
+        map(subscriptionList, (s) => {
           return searchRequestFormatter(s);
         })
       ),
@@ -70,7 +70,7 @@ bot.action(SUBSCRIPTION_LIST_ACTION, async ctx => {
   }
 });
 
-bot.hears(/^\/remove_subscription_/, ctx => {
+bot.hears(/^\/remove_subscription_/, (ctx) => {
   const msg = ctx.message.text;
   const id = last(split(msg, "_"));
 
@@ -81,13 +81,17 @@ bot.hears(/^\/remove_subscription_/, ctx => {
   }
 });
 
-const mainMenu = ctx => {
+const mainMenu = (ctx) => {
   return ctx.reply("Welcome to Ryanair bot.", mainMenuKeyboard);
 };
 
-bot.action(SEARCH_ACTION, ctx => {
+bot.action(SEARCH_ACTION, (ctx) => {
   logger.debug("received SEARCH_ACTION action");
-  ctx.scene.enter(SEARCH_RESULT_SCENE);
+  if (!ctx.session.searchParams) {
+    ctx.scene.enter(DEPARTURE_SCENE);
+  } else {
+    ctx.scene.enter(SEARCH_RESULT_SCENE);
+  }
 });
 
 bot.action(MAIN_MENU_ACTION, mainMenu);

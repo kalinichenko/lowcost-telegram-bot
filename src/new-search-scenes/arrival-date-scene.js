@@ -47,7 +47,7 @@ arrivalDateScene.on("message", async (ctx) => {
     }
     ctx.session.searchParams = {
       ...ctx.session.searchParams,
-      arrivalDateMin: formatDate(arrivalDapteMin),
+      arrivalDateMin: formatDate(arrivalDateMin),
       arrivalDateMax: formatDate(arrivalDateMax),
     };
   }

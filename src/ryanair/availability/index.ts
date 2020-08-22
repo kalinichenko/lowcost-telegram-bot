@@ -60,7 +60,7 @@ const getCheapestTripWithDuration = ({
 
 export const getRyanairFlight = async (
   subscription: Subscription
-): Promise<Trip> => {
+): Promise<Trip | null> => {
   const {
     departureIataCode,
     arrivalIataCode,
@@ -101,6 +101,9 @@ export const getRyanairFlight = async (
       });
 
   if (!arrivalDateMin && !durationMin) {
+    if (outbounds.length === 0) {
+      return null;
+    }
     const outbound = departureDateMax
       ? minBy(outbounds, "amount")
       : head(outbounds);

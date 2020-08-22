@@ -6,18 +6,23 @@ import { Flight } from "../../types";
 import { getQueryParams } from "./getQueryParams";
 import { logger } from "../../logger";
 
-const findCheapestFlights = ({ dates, departureIataCode, arrivalIataCode }) => {
+const findCheapestFlights = ({
+  dates,
+  departureIataCode,
+  arrivalIataCode,
+}): [Flight] => {
   const cheapestFlights = reduce(
     dates,
     (acc, date) => {
       if (!isEmpty(date.flights)) {
-        const cheapestFlight = minBy(date.flights, (f) =>
-          get(f.regularFare, "fares.0.amount")
+        const cheapestFlight = minBy(
+          date.flights,
+          (f) => f.regularFare?.fares[0].amount
         );
 
         const flight: Flight = {
-          amount: get(cheapestFlight, "regularFare.fares.0.amount"),
-          departureTime: get(cheapestFlight, "time.0"),
+          amount: cheapestFlight?.regularFare?.fares[0].amount,
+          departureTime: cheapestFlight?.time[0],
           arrivalTime: get(cheapestFlight, "time.1"),
           departureIataCode,
           arrivalIataCode,
@@ -53,10 +58,8 @@ export const getCheapestFlights = (props) => {
     .then((resp) => {
       logger.trace("raw response: %o", resp.data);
 
-      const dates = get(resp.data, "trips.0.dates");
-
       return findCheapestFlights({
-        dates,
+        dates: resp.data?.trips[0].dates,
         arrivalIataCode: props.arrivalIataCode,
         departureIataCode: props.departureIataCode,
       });

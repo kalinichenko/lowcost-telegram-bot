@@ -28,21 +28,23 @@ searchResultScene.enter(async (ctx) => {
 
   const cheapestFlight = await getRyanairFlight(ctx.session.searchParams);
 
-  ctx.session.searchParams = {
-    ...ctx.session.searchParams,
-    price: cheapestFlight.amount,
-  };
+  if (cheapestFlight) {
+    ctx.session.searchParams = {
+      ...ctx.session.searchParams,
+      price: cheapestFlight.amount,
+    };
+  }
 
   const IS_ROUND_TRIP = arrivalDateMin || durationMin;
 
   if (IS_ROUND_TRIP) {
     replyWithRoundTripMessage(
       ctx,
-      get(cheapestFlight, "outbound"),
-      get(cheapestFlight, "inbound")
+      cheapestFlight?.outbound,
+      cheapestFlight?.inbound
     );
   } else {
-    replyWithOneWayTripMessage(ctx, get(cheapestFlight, "outbound"));
+    replyWithOneWayTripMessage(ctx, cheapestFlight?.outbound);
   }
 });
 
