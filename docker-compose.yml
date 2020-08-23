@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://user:pass@postgres:5432/db
+      DATABASE_SSL: "false"
+      NODE_ENV: development
+      TELEGRAM_TOKEN: $TELEGRAM_TOKEN
+      LOG_LEVEL: $LOG_LEVEL
+    command: yarn start
+    volumes:
+      - .:/app/
+      - /app/node_modules
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
+    volumes:
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/init1.sql
+      - ./sql/airports.sql:/docker-entrypoint-initdb.d/init2.sql

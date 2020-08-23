@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS flight_prices;
 DROP TABLE IF EXISTS flight_subscriptions;
 DROP TABLE IF EXISTS airports;
 
@@ -24,12 +23,9 @@ CREATE TABLE flight_subscriptions (
   adults smallint DEFAULT 1,
   teens smallint DEFAULT 0,
   children smallint DEFAULT 0,
-  infants smallint DEFAULT 0
-);
-
-CREATE TABLE flight_prices (
-  subscription_id integer REFERENCES flight_subscriptions (id) PRIMARY KEY,
-  price numeric(6,2) NOT NULL
+  infants smallint DEFAULT 0,
+  price numeric(6,2),
+  updated_at timestamp
 );
 
 
