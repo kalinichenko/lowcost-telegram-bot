@@ -26,4 +26,3 @@ services:
       POSTGRES_DB: db
     volumes:
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/init1.sql
-      - ./sql/airports.sql:/docker-entrypoint-initdb.d/init2.sql

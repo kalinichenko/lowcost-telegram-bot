@@ -1,10 +1,11 @@
-FROM node:lts
+FROM node:15
 
 WORKDIR /app
 
-COPY ./package.json ./yarn.lock
+COPY ./package.json .
+COPY ./yarn.lock .
 
 RUN cd /app   
-RUN yarn install --frozen-lockfile --non-interactive --no-progress  
-COPY ./ /app
-RUN cd /app && yarn build
+RUN yarn install --frozen-lockfile --non-interactive --no-progress --ignore-scripts
+COPY . .
+RUN yarn build

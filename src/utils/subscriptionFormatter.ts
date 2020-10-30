@@ -1,5 +1,5 @@
 import { get } from "lodash";
-import { getAirportByIataCode } from "../db/airports";
+import { getAirportByIataCode } from "../ryanair/airports";
 import formatShortDate from "./formatShortDate";
 import { Subscription } from "../db/flightSubscriptions";
 import formatDateTime from "./formatDateTime";
@@ -23,19 +23,22 @@ export default async (subscription: Subscription): Promise<string> => {
     infants,
     id,
     price,
-    updatedAt
+    updatedAt,
   } = subscription;
 
   const depratureAirport: string = await getAirportName(departureIataCode);
   const arrivalAirport: string = await getAirportName(arrivalIataCode);
 
-  const departureDates: string = `Departure: ${formatShortDate(
-    departureDateMin
-  ) + (departureDateMax ? " - " + formatShortDate(departureDateMax) : "")}\n`;
+  const departureDates: string = `Departure: ${
+    formatShortDate(departureDateMin) +
+    (departureDateMax ? " - " + formatShortDate(departureDateMax) : "")
+  }\n`;
 
   const arrivalDates: string = arrivalDateMin
-    ? `Arrival: ${formatShortDate(arrivalDateMin) +
-        (arrivalDateMax ? " - " + formatShortDate(arrivalDateMax) : "")}\n`
+    ? `Arrival: ${
+        formatShortDate(arrivalDateMin) +
+        (arrivalDateMax ? " - " + formatShortDate(arrivalDateMax) : "")
+      }\n`
     : "";
 
   const durations: string = durationMin

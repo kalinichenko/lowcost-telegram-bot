@@ -1,19 +1,10 @@
 DROP TABLE IF EXISTS flight_subscriptions;
-DROP TABLE IF EXISTS airports;
-
-
-CREATE TABLE airports (
-  iata_code char(3) PRIMARY KEY,
-  airport_name varchar(36) NOT NULL,
-  city_name varchar(36) NOT NULL,
-  country_name varchar(36) NOT NULL
-);
 
 CREATE TABLE flight_subscriptions (
   id SERIAL PRIMARY KEY,
   chat_id bigint NOT NULL,
-  departure_iata_code char(3) REFERENCES airports(iata_code),
-  arrival_iata_code char(3) REFERENCES airports(iata_code),
+  departure_iata_code char(3),
+  arrival_iata_code char(3),
   departure_date_min date NOT NULL,
   departure_date_max date,
   arrival_date_min date,

@@ -1,27 +1,27 @@
-import { size, head, get } from "lodash";
+import { size, head } from "lodash";
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
-import { getAirports } from "../db/airports";
+import { getAirportsByNameOrIata } from "../ryanair/airports";
 import { DEPARTURE_SCENE, ARRIVAL_SCENE } from "../scenes";
 
 export const departureScene = new Scene(DEPARTURE_SCENE);
 
-departureScene.enter(ctx => {
+departureScene.enter((ctx) => {
   ctx.session.searchParams = null;
   ctx.replyWithHTML("Type the <b>departure</b> airport name");
 });
 
-departureScene.on("message", async ctx => {
+departureScene.on("message", async (ctx) => {
   const msg = ctx.message.text;
-  const airports = await getAirports(msg);
+  const airports = await getAirportsByNameOrIata(msg);
 
   switch (size(airports)) {
     case 1: {
       const airport = head(airports);
       ctx.session.searchParams = {
-        departureIataCode: get(airport, "iataCode"),
-        departureAirport: get(airport, "airportName")
+        departureIataCode: airport?.iataCode,
+        departureAirport: airport?.airportName,
       };
 
       ctx.scene.enter(ARRIVAL_SCENE);
@@ -34,7 +34,7 @@ departureScene.on("message", async ctx => {
     default: {
       ctx.reply(
         "Which one?",
-        Markup.keyboard(airports.map(o => o.airportName))
+        Markup.keyboard(airports.map((o) => o.airportName))
           .oneTime()
           .resize()
           .extra()
