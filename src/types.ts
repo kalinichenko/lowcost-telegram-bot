@@ -31,6 +31,6 @@ export interface SearchRequest {
 export interface Airport {
   airportName: string;
   iataCode: string;
-  cityName: string;
+  cityName?: string;
   countryName: string;
 }
