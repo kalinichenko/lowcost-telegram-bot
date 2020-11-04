@@ -1,9 +1,5 @@
 const dayjs = require("dayjs");
-import { get } from "lodash";
-import { getAirportByIataCode } from "../ryanair/airports";
-
-const getAirportName = async (iataCode) =>
-  get(await getAirportByIataCode(iataCode), "airportName");
+import { getAirportName } from "../providers";
 
 export default async ({
   departureIataCode,

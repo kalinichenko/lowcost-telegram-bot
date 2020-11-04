@@ -1,11 +1,7 @@
-import { get } from "lodash";
-import { getAirportByIataCode } from "../ryanair/airports";
+import { getAirportName } from "../providers";
 import formatShortDate from "./formatShortDate";
 import { Subscription } from "../db/flightSubscriptions";
 import formatDateTime from "./formatDateTime";
-
-const getAirportName = async (iataCode: string): Promise<string> =>
-  get(await getAirportByIataCode(iataCode), "airportName");
 
 export default async (subscription: Subscription): Promise<string> => {
   const {

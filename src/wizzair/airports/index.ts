@@ -4,17 +4,14 @@ import { logger } from "../../logger";
 
 import { getApiUrl } from "../meta";
 
-let iata2airport: Record<string, Airport>;
 let iata2arrivalAirports: Record<string, Airport[]>;
 
-export const getAirports = async (): Promise<Airport[]> => {
-  if (iata2airport) {
-    return Object.values(iata2airport);
-  }
-
+export const getDepartureAirports = async (): Promise<
+  Record<string, Airport>
+> => {
   const apiUrl = await getApiUrl();
   const resp = await axios.get(`${apiUrl}/asset/map?languageCode=en-gb`);
-  iata2airport = resp?.data?.reduce(
+  const departureAirports = resp?.data?.cities?.reduce(
     (acc, { iata: iataCode, shortName: airportName, countryName }) => {
       acc[iataCode] = {
         airportName,
@@ -25,18 +22,21 @@ export const getAirports = async (): Promise<Airport[]> => {
     },
     {}
   );
-  logger.info("[wizzair] loaded %s airports", iata2airport.length);
+  logger.info(
+    "[wizzair] loaded %s airports",
+    Object.keys(departureAirports).length
+  );
 
-  iata2arrivalAirports = resp?.data?.reduce((acc, airport) => {
+  iata2arrivalAirports = resp?.data?.cities?.reduce((acc, airport) => {
     if (airport.connections) {
       acc[airport.iata] = airport.connections.map(
-        ({ iata }) => iata2airport[iata]
+        ({ iata }) => departureAirports[iata]
       );
     }
     return acc;
   }, {});
 
-  return Object.values(iata2airport);
+  return departureAirports;
 };
 
 export const getArrivalAirports = (

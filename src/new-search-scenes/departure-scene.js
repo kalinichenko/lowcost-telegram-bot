@@ -2,7 +2,7 @@ import { size, head } from "lodash";
 const Scene = require("telegraf/scenes/base");
 const Markup = require("telegraf/markup");
 
-import { getAirportsByNameOrIata } from "../ryanair/airports";
+import { getAirportsByNameOrIata } from "../providers";
 import { DEPARTURE_SCENE, ARRIVAL_SCENE } from "../scenes";
 
 export const departureScene = new Scene(DEPARTURE_SCENE);
@@ -34,7 +34,7 @@ departureScene.on("message", async (ctx) => {
     default: {
       ctx.reply(
         "Which one?",
-        Markup.keyboard(airports.map((o) => o.airportName))
+        Markup.keyboard(airports.map((o) => `${o.airportName} (${o.iataCode})`))
           .oneTime()
           .resize()
           .extra()
