@@ -1,16 +1,10 @@
 import axios from "axios";
-import { map, get, filter, includes, toLower } from "lodash";
-import { Airport } from "../../types";
 import { logger } from "../../logger";
+import { Airport } from "../../types";
 
-const departure2arrivals = {};
-
-const getArrivalsByDeparture = async (
+export const getArrivalAirports = async (
   departureIata: string
 ): Promise<Airport[]> => {
-  if (departure2arrivals[departureIata]) {
-    return Promise.resolve(departure2arrivals[departureIata]);
-  }
   const resp = await axios.get(
     `https://www.ryanair.com/api/locate/v1/autocomplete/routes?departurePhrase=${departureIata}`,
     {
@@ -20,34 +14,26 @@ const getArrivalsByDeparture = async (
       },
     }
   );
-  departure2arrivals[departureIata] = map(resp.data, (airport) => {
-    const arrivalAirport = airport?.arrivalAirport;
+  logger.info(
+    "[ryanair] loaded %s arrival airports by departure %s",
+    resp.data.length,
+    departureIata
+  );
+
+  return resp.data.map((airport) => {
+    const {
+      name: airportName,
+      code: iataCode,
+      city: { name: cityName },
+      country: { name: countryName },
+    } = airport.arrivalAirport;
+
     return {
-      airportName: arrivalAirport?.name,
-      iataCode: arrivalAirport?.code,
-      cityName: arrivalAirport?.city.name,
-      countryName: arrivalAirport?.country.name,
+      airportName,
+      iataCode,
+      cityName,
+      countryName,
+      fullName: `${airportName} (${iataCode})`,
     };
   });
-  return departure2arrivals[departureIata];
-};
-
-export const getArrivalAirport = async (
-  departureIata: string,
-  arrivalPhrase: string
-) => {
-  const airports: Airport[] = await getArrivalsByDeparture(departureIata);
-  const phrase = toLower(arrivalPhrase);
-  const arrivalAirport = filter(airports, ({ airportName, iataCode }) => {
-    return (
-      includes(toLower(airportName), phrase) || toLower(iataCode) === phrase
-    );
-  });
-  logger.debug(
-    "getArrivalAirport(%s, %s) => %o",
-    departureIata,
-    arrivalPhrase,
-    arrivalAirport
-  );
-  return arrivalAirport;
 };

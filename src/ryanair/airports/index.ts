@@ -23,6 +23,7 @@ export const getDepartureAirports = async (): Promise<
         iataCode,
         cityName,
         countryName,
+        fullName: `${airportName} (${iataCode})`,
       };
       return acc;
     },

@@ -33,4 +33,5 @@ export interface Airport {
   iataCode: string;
   cityName?: string;
   countryName: string;
+  fullName: string;
 }

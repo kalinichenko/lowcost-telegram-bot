@@ -1,4 +1,4 @@
-import { getAirportName } from "../providers";
+import { getDepartureAirportName } from "../providers";
 import formatShortDate from "./formatShortDate";
 import { Subscription } from "../db/flightSubscriptions";
 import formatDateTime from "./formatDateTime";
@@ -22,8 +22,10 @@ export default async (subscription: Subscription): Promise<string> => {
     updatedAt,
   } = subscription;
 
-  const depratureAirport: string = await getAirportName(departureIataCode);
-  const arrivalAirport: string = await getAirportName(arrivalIataCode);
+  const depratureAirport: string = await getDepartureAirportName(
+    departureIataCode
+  );
+  const arrivalAirport: string = await getDepartureAirportName(arrivalIataCode);
 
   const departureDates: string = `Departure: ${
     formatShortDate(departureDateMin) +

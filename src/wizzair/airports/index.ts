@@ -17,6 +17,7 @@ export const getDepartureAirports = async (): Promise<
         airportName,
         iataCode,
         countryName,
+        fullName: `${airportName.trim()} (${iataCode})`,
       };
       return acc;
     },
@@ -39,28 +40,6 @@ export const getDepartureAirports = async (): Promise<
   return departureAirports;
 };
 
-export const getArrivalAirports = (
-  departureIata: string,
-  arrivalPhrase: string
-): Airport[] => {
-  if (!iata2arrivalAirports) {
-    return null;
-  }
-  const arrivalAirports: Airport[] = iata2arrivalAirports[departureIata];
-  if (!arrivalAirports) {
-    return null;
-  }
-  const phrase = arrivalPhrase.toLowerCase();
-  const arrivalAirport = arrivalAirports?.filter(
-    ({ airportName, iataCode }) =>
-      airportName.toLowerCase().includes(phrase) ||
-      iataCode.toLowerCase() === phrase
-  );
-  logger.debug(
-    "[wizzair] arrival airports for departure iata %s by phrase %s: %o",
-    departureIata,
-    arrivalPhrase,
-    arrivalAirport
-  );
-  return arrivalAirport;
+export const getArrivalAirports = (departureIata: string): Airport[] => {
+  return iata2arrivalAirports[departureIata];
 };
