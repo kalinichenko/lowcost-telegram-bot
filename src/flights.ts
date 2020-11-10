@@ -5,8 +5,8 @@ import {
   updateMySubscription,
   removeFlightSubscriptionByChatId,
 } from "./db/flightSubscriptions";
-import { getRyanairFlight } from "./ryanair/availability";
-import getRyanairUrl from "./ryanair/availability/getUrl";
+import { getRyanairFlight } from "./providers/ryanair/availability";
+import getRyanairUrl from "./providers/ryanair/availability/getUrl";
 import flightFormatter from "./utils/flightFormatter";
 import { bot } from "./bot";
 import { Trip } from "./types";

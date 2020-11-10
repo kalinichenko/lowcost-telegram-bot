@@ -1,8 +1,8 @@
 import { get } from "lodash";
 const Scene = require("telegraf/scenes/base");
 import { SEARCH_RESULT_SCENE, DEPARTURE_SCENE } from "../scenes";
-import { getRyanairFlight } from "../ryanair/availability";
-import getRyanairUrl from "../ryanair/availability/getUrl";
+import { getRyanairFlight } from "../providers/ryanair/availability";
+import getRyanairUrl from "../providers/ryanair/availability/getUrl";
 import {
   Subscription,
   addFlightSubscriptions,

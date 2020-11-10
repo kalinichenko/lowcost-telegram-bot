@@ -1,8 +1,9 @@
 import axios from "axios";
-import { Airport } from "../../types";
-import { logger } from "../../logger";
+import { Airport } from "../../../types";
+import { logger } from "../../../logger";
 
 import { getApiUrl } from "../meta";
+import { findAirports } from "../../findAirports";
 
 let iata2arrivalAirports: Record<string, Airport[]>;
 
@@ -42,4 +43,22 @@ export const getDepartureAirports = async (): Promise<
 
 export const getArrivalAirports = (departureIata: string): Airport[] => {
   return iata2arrivalAirports[departureIata];
+};
+
+export const findArrivalAirports = (
+  departureIata: string,
+  arrivalPhrase: string
+): Airport[] => {
+  const airports = findAirports(
+    arrivalPhrase,
+    getArrivalAirports(departureIata)
+  );
+
+  logger.debug(
+    "[wizzair ]findArrivalAirports(%s, %s) => %o",
+    departureIata,
+    arrivalPhrase,
+    airports
+  );
+  return airports;
 };

@@ -3,9 +3,9 @@ import { minBy, filter, reduce, get, isEmpty, head, find } from "lodash";
 
 import { getCheapestFlightsForPeriod } from "./getCheapestFlightsForPeriod";
 import { getCheapestFlights } from "./getCheapestFlights";
-import { Trip, Flight } from "../../types";
-import { Subscription } from "../../db/flightSubscriptions";
-import { logger } from "../../logger";
+import { Trip, Flight } from "../../../types";
+import { Subscription } from "../../../db/flightSubscriptions";
+import { logger } from "../../../logger";
 
 const DAY = 1000 * 3600 * 24;
 

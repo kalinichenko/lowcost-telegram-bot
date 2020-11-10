@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logger } from "../../logger";
+import { logger } from "../../../logger";
 
 const BASE_URL = "https://wizzair.com";
 export const getApiUrl = async () => {

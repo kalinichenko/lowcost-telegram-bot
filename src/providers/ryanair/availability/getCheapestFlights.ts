@@ -1,10 +1,10 @@
 const axios = require("axios");
 const querystring = require("querystring");
 import { get, isEmpty, reduce, minBy } from "lodash";
-import { Flight } from "../../types";
+import { Flight } from "../../../types";
 
 import { getQueryParams } from "./getQueryParams";
-import { logger } from "../../logger";
+import { logger } from "../../../logger";
 
 const findCheapestFlights = ({
   dates,

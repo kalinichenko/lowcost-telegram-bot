@@ -1,6 +1,6 @@
 import axios from "axios";
-import { logger } from "../../logger";
-import { Airport } from "../../types";
+import { logger } from "../../../logger";
+import { Airport } from "../../../types";
 
 export const getArrivalAirports = async (
   departureIata: string

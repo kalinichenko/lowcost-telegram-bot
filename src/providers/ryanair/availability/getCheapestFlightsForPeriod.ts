@@ -1,7 +1,7 @@
 import dayjs = require("dayjs");
 import { flatten, sortBy, uniqBy } from "lodash";
 import { getCheapestFlights } from "./getCheapestFlights";
-import { Flight } from "../../types";
+import { Flight } from "../../../types";
 
 const DAY = 1000 * 3600 * 24;
 const MAX_FLEX_DAYS = 6;
@@ -15,7 +15,7 @@ const scanPrices = (departureDateMin, departureDateMax) => {
     const departureDate = dayjs(current).format("YYYY-MM-DD");
     res.push({
       departureDate,
-      flexDays
+      flexDays,
     });
     current = current + flexDays * DAY;
   }
@@ -30,7 +30,7 @@ export const getCheapestFlightsForPeriod = ({
   adults,
   teens,
   children,
-  infants
+  infants,
 }) =>
   Promise.all(
     scanPrices(departureDateMin, departureDateMax).map(
@@ -43,11 +43,11 @@ export const getCheapestFlightsForPeriod = ({
           adults,
           teens,
           children,
-          infants
+          infants,
         });
       }
     )
   )
     .then(flatten)
-    .then(res => uniqBy(res, (flight: Flight) => flight.dateOut.getTime()))
-    .then(res => sortBy(res, (flight: Flight) => flight.dateOut.getTime()));
+    .then((res) => uniqBy(res, (flight: Flight) => flight.dateOut.getTime()))
+    .then((res) => sortBy(res, (flight: Flight) => flight.dateOut.getTime()));
