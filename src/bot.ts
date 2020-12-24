@@ -1,5 +1,6 @@
 process.env.NTBA_FIX_319 = "1";
 import { map, join, last, split, isEmpty } from "lodash";
+import { i18n } from "./i18n";
 const Telegraf = require("telegraf");
 const session = require("telegraf/session");
 const Stage = require("telegraf/stage");
@@ -46,6 +47,8 @@ const stage = new Stage(
     ttl: 100,
   }
 );
+
+bot.use(i18n.middleware());
 bot.use(session());
 bot.use(stage.middleware());
 
@@ -82,7 +85,7 @@ bot.hears(/^\/remove_subscription_/, (ctx) => {
 });
 
 const mainMenu = (ctx) => {
-  return ctx.reply("Welcome to Ryanair bot.", mainMenuKeyboard);
+  return ctx.reply(ctx.i18n.t("greeting"), mainMenuKeyboard(ctx));
 };
 
 bot.action(SEARCH_ACTION, (ctx) => {

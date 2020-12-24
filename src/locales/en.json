@@ -1,0 +1,10 @@
+{
+  "greeting": "Welcome to Ryanair bot.",
+  "my-price-alerts": "My price alerts",
+  "new-search": "New Search",
+  "type-departure-airport": "Type the <b>departure</b> airport name",
+  "type-arrival-airport": "Type the <b>arrival</b> airport name",
+  "airport-not-found": "Airport not found",
+  "which-one": "Which one?",
+  "type-departure-date": "Enter a <b>departure date</b> or a period\n (e.g 29.02 or 29.02-07.03)\n"
+}

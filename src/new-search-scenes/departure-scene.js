@@ -9,7 +9,7 @@ export const departureScene = new Scene(DEPARTURE_SCENE);
 
 departureScene.enter((ctx) => {
   ctx.session.searchParams = null;
-  ctx.replyWithHTML("Type the <b>departure</b> airport name");
+  ctx.replyWithHTML(ctx.i18n.t("type-departure-airport"));
 });
 
 departureScene.on("message", async (ctx) => {
@@ -28,12 +28,12 @@ departureScene.on("message", async (ctx) => {
       break;
     }
     case 0: {
-      ctx.reply("I couldn't find it.");
+      ctx.reply(ctx.i18n.t("airport-not-found"));
       break;
     }
     default: {
       ctx.reply(
-        "Which one?",
+        ctx.i18n.t("which-one"),
         Markup.keyboard(airports.map((o) => `${o.airportName} (${o.iataCode})`))
           .oneTime()
           .resize()

@@ -13,7 +13,7 @@ arrivalDateScene.enter((ctx) =>
       "(e.g 29.02 or 29.02-07.03)\n" +
       "or a trip duration or a range\n" +
       "(e.g 7 or 7-14)\n" +
-      "or click Search Now button for <b>one way trip</b>",
+      "or click <b>Search Now</b> button for <b>one way trip</b>",
     searchNowKeyboard
   )
 );

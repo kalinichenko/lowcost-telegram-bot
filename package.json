@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "postinstall": "npm run build",
-    "start": "nodemon -e js,ts -w src -x 'npx tsc && node build/standalone-bot.js | ./node_modules/.bin/pino-pretty -ct'"
+    "start": "nodemon -e js,ts,json -w src -x 'npx tsc && node build/standalone-bot.js | ./node_modules/.bin/pino-pretty -ct'"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "pino": "^6.5.1",
     "pino-pretty": "^4.1.0",
     "telegraf": "^3.38.0",
+    "telegraf-i18n": "^6.6.0",
     "typescript": "^4.0.2"
   },
   "devDependencies": {

@@ -7,7 +7,7 @@ import { findArrivalAirports } from "../providers";
 export const arrivalScene = new Scene(ARRIVAL_SCENE);
 
 arrivalScene.enter((ctx) =>
-  ctx.replyWithHTML("Type the <b>arrival</b> airport name", {
+  ctx.replyWithHTML(ctx.i18n.t("type-arrival-airport"), {
     reply_markup: {
       remove_keyboard: true,
     },
@@ -32,12 +32,12 @@ arrivalScene.on("message", async (ctx) => {
       break;
     }
     case 0: {
-      ctx.reply("I couldn't find it.");
+      ctx.reply(ctx.i18n.t("airport-not-found"));
       break;
     }
     default: {
       ctx.reply(
-        "Which one?",
+        ctx.i18n.t("which-one"),
         Markup.keyboard(airports.map((o) => o.fullName))
           .oneTime()
           .resize()
