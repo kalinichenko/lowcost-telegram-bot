@@ -24,7 +24,7 @@ searchResultScene.action(MAIN_MENU_ACTION, (ctx) =>
 searchResultScene.enter(async (ctx) => {
   const { arrivalDateMin, durationMin } = ctx.session.searchParams;
 
-  ctx.reply("loading results ...");
+  ctx.replyWithHTML(ctx.i18n.t("loading-results"));
 
   const cheapestFlight = await getRyanairFlight(ctx.session.searchParams);
 
@@ -50,7 +50,7 @@ searchResultScene.enter(async (ctx) => {
 
 const replyWithOneWayTripMessage = async (ctx, outbound) => {
   if (!outbound) {
-    return ctx.replyWithHTML("No flight found", newSearchKeyboard);
+    return ctx.replyWithHTML("No flight found", newSearchKeyboard(ctx));
   }
 
   const url = getRyanairUrl({
@@ -58,18 +58,21 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
     arrivalTime: null,
   });
 
-  const msg =
-    `${await flightFormatter(outbound)}\n` +
-    `Buy ticket <a href="${url}">here</>\n`;
+  const msg = `${await flightFormatter(
+    outbound
+  )}\n${ctx.i18n.t("buy-ticket-here", { url })}\n`;
 
   logger.trace("reply message: %s", msg);
 
-  ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
+  ctx.replyWithHTML(msg, searchMenuTrackKeyboard(ctx));
 };
 
 const replyWithRoundTripMessage = async (ctx, outbound, inbound) => {
   if (!outbound && !inbound) {
-    return ctx.replyWithHTML("No flights found", newSearchKeyboard);
+    return ctx.replyWithHTML(
+      ctx.i18n.t("no-flights-found"),
+      newSearchKeyboard(ctx)
+    );
   }
 
   let urlParams;
@@ -94,14 +97,17 @@ const replyWithRoundTripMessage = async (ctx, outbound, inbound) => {
 
   const msg =
     `${
-      outbound ? await flightFormatter(outbound) : "No inbound flight found.\n"
+      outbound
+        ? await flightFormatter(outbound, ctx)
+        : `${ctx.i18n.t("no-outbound-flight-found")}\n`
     }\n` +
     `${
-      inbound ? await flightFormatter(inbound) : "No inbound flight found.\n"
-    }` +
-    `Buy tickets <a href="${url}">here</>\n`;
+      inbound
+        ? await flightFormatter(inbound, ctx)
+        : `${ctx.i18n.t("no-inbound-flight-found")}\n`
+    }${ctx.i18n.t("buy-ticket-here", { url })}\n`;
 
-  return ctx.replyWithHTML(msg, searchMenuTrackKeyboard);
+  return ctx.replyWithHTML(msg, searchMenuTrackKeyboard(ctx));
 };
 
 searchResultScene.action(CREATE_PRICE_ALERT_ACTION, async (ctx) => {

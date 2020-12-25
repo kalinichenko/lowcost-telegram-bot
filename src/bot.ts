@@ -85,7 +85,7 @@ bot.hears(/^\/remove_subscription_/, (ctx) => {
 });
 
 const mainMenu = (ctx) => {
-  return ctx.reply(ctx.i18n.t("greeting"), mainMenuKeyboard(ctx));
+  return ctx.replyWithHTML(ctx.i18n.t("greeting"), mainMenuKeyboard(ctx));
 };
 
 bot.action(SEARCH_ACTION, (ctx) => {

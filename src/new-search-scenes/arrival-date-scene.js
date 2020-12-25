@@ -8,14 +8,7 @@ import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
 export const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
 
 arrivalDateScene.enter((ctx) =>
-  ctx.replyWithHTML(
-    "Enter an <b>arival date</b> or a period\n" +
-      "(e.g 29.02 or 29.02-07.03)\n" +
-      "or a trip duration or a range\n" +
-      "(e.g 7 or 7-14)\n" +
-      "or click <b>Search Now</b> button for <b>one way trip</b>",
-    searchNowKeyboard
-  )
+  ctx.replyWithHTML(ctx.i18n.t("type-arrival-date"), searchNowKeyboard(ctx))
 );
 
 arrivalDateScene.on("message", async (ctx) => {
@@ -32,7 +25,7 @@ arrivalDateScene.on("message", async (ctx) => {
     const [arrivalDateMin, arrivalDateMax] = parseDateRange(msg);
 
     if (!arrivalDateMin) {
-      ctx.reply("Wrong date format");
+      ctx.reply(ctx.i18n.t("wrong-date-format"));
       return;
     }
 
@@ -41,7 +34,7 @@ arrivalDateScene.on("message", async (ctx) => {
         (arrivalDateMax.getTime() - arrivalDateMin.getTime()) /
         (1000 * 3600 * 24);
       if (Math.abs(days) > 18) {
-        ctx.reply("Entered date range is too big");
+        ctx.reply(ctx.i18n.t("too-long-period"));
         return;
       }
     }

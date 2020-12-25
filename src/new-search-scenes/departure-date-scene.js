@@ -16,7 +16,7 @@ departureDateScene.on("message", async (ctx) => {
   const msg = ctx.message.text;
   const [departureDateMin, departureDateMax] = parseDateRange(msg);
   if (!departureDateMin) {
-    ctx.reply("Wrong date format");
+    ctx.reply(ctx.i18n.t("wrong-date-format"));
     return;
   }
 
@@ -25,7 +25,7 @@ departureDateScene.on("message", async (ctx) => {
       (departureDateMax.getTime() - departureDateMin.getTime()) /
       (1000 * 3600 * 24);
     if (Math.abs(days) > 31) {
-      ctx.reply("Entered date range is too big");
+      ctx.reply(ctx.i18n.t("too-long-period"));
       return;
     }
   }

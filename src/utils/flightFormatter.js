@@ -1,13 +1,10 @@
 const dayjs = require("dayjs");
 import { getDepartureAirportName } from "../providers";
 
-export default async ({
-  departureIataCode,
-  arrivalIataCode,
-  departureTime,
-  arrivalTime,
-  amount,
-}) => {
+export default async (
+  { departureIataCode, arrivalIataCode, departureTime, arrivalTime, amount },
+  ctx
+) => {
   const departureAirportName = await getDepartureAirportName(departureIataCode);
   const arrivalAirportName = await getDepartureAirportName(arrivalIataCode);
 

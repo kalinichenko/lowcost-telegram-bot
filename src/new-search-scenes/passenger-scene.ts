@@ -5,25 +5,25 @@ import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
 
 export const passengersScene = new Scene(PASSENGERS_SCENE);
 
-passengersScene.enter(ctx => {
+passengersScene.enter((ctx) => {
   ctx.replyWithHTML(
     "Type the number of adults/teens/children/infants\n" +
       "e.g: <b>3/2/1</b>\n" +
       "or simply click the search button\n",
-    searchNowKeyboard
+    searchNowKeyboard(ctx)
   );
 });
 
-passengersScene.action(SEARCH_ACTION, ctx => {
+passengersScene.action(SEARCH_ACTION, (ctx) => {
   ctx.session.searchParams = {
     ...ctx.session.searchParams,
-    adults: 1
+    adults: 1,
   };
 
   ctx.scene.enter(SEARCH_RESULT_SCENE);
 });
 
-passengersScene.on("message", async ctx => {
+passengersScene.on("message", async (ctx) => {
   const msg = ctx.message.text;
   const [adults, teens, children, infants] = msg.split("/");
 
@@ -32,7 +32,7 @@ passengersScene.on("message", async ctx => {
     adults,
     teens,
     children,
-    infants
+    infants,
   };
 
   ctx.scene.enter(SEARCH_RESULT_SCENE);
