@@ -17,5 +17,8 @@
   "buy-ticket-here": "Купить билет(ы) <a href=\"${url}\">здесь</>",
   "no-flights-found": "К сожалению билеты по указанным критериям не найдены",
   "no-inbound-flight-found": "Билет назад не найден.",
-  "no-outbound-flight-found": "Билет туда не найден."
+  "no-outbound-flight-found": "Билет туда не найден.",
+  "price-alert-added": "Подписка добавлена",
+  "date": "Дата: ${date}",
+  "price": "Цена: ${price} евро"
 }

@@ -85,6 +85,7 @@ bot.hears(/^\/remove_subscription_/, (ctx) => {
 });
 
 const mainMenu = (ctx) => {
+  logger.debug("request locale: %s", ctx.i18n.locale());
   return ctx.replyWithHTML(ctx.i18n.t("greeting"), mainMenuKeyboard(ctx));
 };
 

@@ -2,11 +2,17 @@ import axios from "axios";
 import { logger } from "../../../logger";
 import { Airport } from "../../../types";
 
+const locale2market = {
+  ru: "uk-ua",
+  en: "en-gb",
+};
+
 export const getArrivalAirports = async (
-  departureIata: string
+  departureIata: string,
+  locale: string
 ): Promise<Airport[]> => {
   const resp = await axios.get(
-    `https://www.ryanair.com/api/locate/v1/autocomplete/routes?departurePhrase=${departureIata}`,
+    `https://www.ryanair.com/api/locate/v1/autocomplete/routes?departurePhrase=${departureIata}&market=${locale2market[locale]}`,
     {
       headers: {
         "User-Agent":

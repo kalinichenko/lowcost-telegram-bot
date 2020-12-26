@@ -4,23 +4,26 @@ import { Airport } from "../types";
 import { logger } from "../logger";
 import { findAirports } from "./findAirports";
 
-let departureAirports: Record<string, Airport>;
+const locale2airports: Record<string, Record<string, Airport>> = {};
 
-const getDepartureAirports = async (): Promise<Record<string, Airport>> => {
-  if (!departureAirports) {
+const getDepartureAirports = async (
+  locale: string
+): Promise<Record<string, Airport>> => {
+  if (!locale2airports[locale]) {
     const [a, b] = await Promise.all([
-      ryanair.getDepartureAirports(),
-      wizzair.getDepartureAirports(),
+      ryanair.getDepartureAirports(locale),
+      // wizzair.getDepartureAirports(),
     ]);
-    departureAirports = { ...a, ...b };
+    locale2airports[locale] = { ...a, ...b };
   }
-  return departureAirports;
+  return locale2airports[locale];
 };
 
 export const findDepartureAirports = async (
-  nameOrIata: string
+  nameOrIata: string,
+  locale: string
 ): Promise<Airport[]> => {
-  const departureAirports = await getDepartureAirports();
+  const departureAirports = await getDepartureAirports(locale);
   const airportsByNameOrIata = findAirports(
     nameOrIata,
     Object.values(departureAirports)
@@ -34,25 +37,30 @@ export const findDepartureAirports = async (
   return airportsByNameOrIata;
 };
 
-export const getDepartureAirportByIataCode = async (
-  iataCode: string
+const getDepartureAirportByIataCode = async (
+  iataCode: string,
+  locale: string
 ): Promise<Airport> => {
-  const departureAirports = await getDepartureAirports();
+  const departureAirports = await getDepartureAirports(locale);
   return departureAirports[iataCode.toLowerCase()];
 };
 
-export const getDepartureAirportName = async (iataCode) => {
-  const { airportName } = await getDepartureAirportByIataCode(iataCode);
+export const getDepartureAirportName = async (
+  iataCode: string,
+  locale: string
+) => {
+  const { airportName } = await getDepartureAirportByIataCode(iataCode, locale);
   return airportName;
 };
 
 export const findArrivalAirports = async (
   departureIata: string,
-  arrivalPhrase: string
+  arrivalPhrase: string,
+  locale: string
 ): Promise<Airport[]> => {
   const [a, b] = await Promise.all([
-    ryanair.findArrivalAirports(departureIata, arrivalPhrase),
-    wizzair.findArrivalAirports(departureIata, arrivalPhrase),
+    ryanair.findArrivalAirports(departureIata, arrivalPhrase, locale),
+    // wizzair.findArrivalAirports(departureIata, arrivalPhrase),
   ]);
   return [...(a || []), ...(b || [])].filter(
     (value, index, self) =>

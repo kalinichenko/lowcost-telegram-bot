@@ -18,7 +18,11 @@ arrivalScene.on("message", async (ctx) => {
   const msg = ctx.message.text;
   const { departureIataCode } = ctx.session.searchParams;
 
-  const airports = await findArrivalAirports(departureIataCode, msg);
+  const airports = await findArrivalAirports(
+    departureIataCode,
+    msg,
+    ctx.i18n.locale()
+  );
   switch (size(airports)) {
     case 1: {
       const airport = head(airports);

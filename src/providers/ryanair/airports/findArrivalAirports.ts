@@ -7,22 +7,27 @@ const ryanairArrivalAirports = {};
 
 export const findArrivalAirports = async (
   departureIata: string,
-  arrivalPhrase: string
+  arrivalPhrase: string,
+  locale: string
 ): Promise<Airport[]> => {
-  if (!ryanairArrivalAirports[departureIata]) {
-    ryanairArrivalAirports[departureIata] = await getArrivalAirports(
-      departureIata
+  const key = `${departureIata}_${locale}`;
+
+  if (!ryanairArrivalAirports[key]) {
+    ryanairArrivalAirports[key] = await getArrivalAirports(
+      departureIata,
+      locale
     );
   }
   const arrivalAirports = findAirports(
     arrivalPhrase,
-    ryanairArrivalAirports[departureIata]
+    ryanairArrivalAirports[key]
   );
 
   logger.debug(
-    "[ryanair] findArrivalAirports(%s, %s) => %o",
+    "[ryanair] findArrivalAirports(%s, %s, %s) => %o",
     departureIata,
     arrivalPhrase,
+    locale,
     arrivalAirports
   );
   return arrivalAirports;

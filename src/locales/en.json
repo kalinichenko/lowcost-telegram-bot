@@ -17,5 +17,8 @@
   "buy-ticket-here": "Buy ticket <a href=\"${url}\">here</>",
   "no-flights-found": "No flights by specified criteria found",
   "no-inbound-flight-found": "No inbound flight found.",
-  "no-outbound-flight-found": "No outbound flight found."
+  "no-outbound-flight-found": "No outbound flight found.",
+  "price-alert-added": "Price alert added",
+  "date": "Date: ${date}",
+  "price": "Price: ${price} EUR"
 }

@@ -14,7 +14,7 @@ departureScene.enter((ctx) => {
 
 departureScene.on("message", async (ctx) => {
   const msg = ctx.message.text;
-  const airports = await findDepartureAirports(msg);
+  const airports = await findDepartureAirports(msg, ctx.i18n.locale());
 
   switch (size(airports)) {
     case 1: {

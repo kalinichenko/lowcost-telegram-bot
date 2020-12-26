@@ -54,8 +54,9 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     arrivalTime,
   });
 
-  const outboundMessage = outbound ? await flightFormatter(outbound) : "";
-  const inboundMessage = inbound ? await flightFormatter(inbound) : "";
+  // TODO nulls
+  const outboundMessage = outbound ? await flightFormatter(outbound, null) : "";
+  const inboundMessage = inbound ? await flightFormatter(inbound, null) : "";
 
   const response =
     `<b>New price alert: ${price}EUR</b>\n` +

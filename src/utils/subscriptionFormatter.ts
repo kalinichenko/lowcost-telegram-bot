@@ -23,9 +23,13 @@ export default async (subscription: Subscription): Promise<string> => {
   } = subscription;
 
   const depratureAirport: string = await getDepartureAirportName(
-    departureIataCode
+    departureIataCode,
+    null // TODO
   );
-  const arrivalAirport: string = await getDepartureAirportName(arrivalIataCode);
+  const arrivalAirport: string = await getDepartureAirportName(
+    arrivalIataCode,
+    null //TODO
+  );
 
   const departureDates: string = `Departure: ${
     formatShortDate(departureDateMin) +

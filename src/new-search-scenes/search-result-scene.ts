@@ -50,7 +50,10 @@ searchResultScene.enter(async (ctx) => {
 
 const replyWithOneWayTripMessage = async (ctx, outbound) => {
   if (!outbound) {
-    return ctx.replyWithHTML("No flight found", newSearchKeyboard(ctx));
+    return ctx.replyWithHTML(
+      ctx.i18n.t("no-flights-found"),
+      newSearchKeyboard(ctx)
+    );
   }
 
   const url = getRyanairUrl({
@@ -59,7 +62,8 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
   });
 
   const msg = `${await flightFormatter(
-    outbound
+    outbound,
+    ctx.i18n
   )}\n${ctx.i18n.t("buy-ticket-here", { url })}\n`;
 
   logger.trace("reply message: %s", msg);
@@ -98,12 +102,12 @@ const replyWithRoundTripMessage = async (ctx, outbound, inbound) => {
   const msg =
     `${
       outbound
-        ? await flightFormatter(outbound, ctx)
+        ? await flightFormatter(outbound, ctx.i18n)
         : `${ctx.i18n.t("no-outbound-flight-found")}\n`
     }\n` +
     `${
       inbound
-        ? await flightFormatter(inbound, ctx)
+        ? await flightFormatter(inbound, ctx.i18n)
         : `${ctx.i18n.t("no-inbound-flight-found")}\n`
     }${ctx.i18n.t("buy-ticket-here", { url })}\n`;
 
@@ -119,7 +123,7 @@ searchResultScene.action(CREATE_PRICE_ALERT_ACTION, async (ctx) => {
   };
 
   await addFlightSubscriptions(subscription);
-  return ctx.reply("Price alert added");
+  return ctx.reply(ctx.i18n.t("price-alert-added"));
 });
 
 searchResultScene.hears("New search", (ctx) => {
