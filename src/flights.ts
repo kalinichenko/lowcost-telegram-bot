@@ -52,6 +52,7 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     arrivalIataCode,
     departureTime,
     arrivalTime,
+    locale: null, //TODO
   });
 
   // TODO nulls

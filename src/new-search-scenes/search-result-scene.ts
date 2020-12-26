@@ -59,6 +59,7 @@ const replyWithOneWayTripMessage = async (ctx, outbound) => {
   const url = getRyanairUrl({
     ...outbound,
     arrivalTime: null,
+    locale: ctx.i18n.locale(),
   });
 
   const msg = `${await flightFormatter(
