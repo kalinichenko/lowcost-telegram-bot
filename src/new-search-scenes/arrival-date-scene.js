@@ -1,14 +1,23 @@
 import { includes, split, parseInt } from "lodash";
 import formatDate from "../utils/formatDate";
 const Scene = require("telegraf/scenes/base");
+const Markup = require("telegraf/markup");
+const Extra = require("telegraf/extra");
 import { ARRIVAL_DATE_SCENE, PASSENGERS_SCENE } from "../scenes";
+import { ONE_WAY_ACTION } from "../actions";
 import { parseDateRange } from "../utils/parseDateRange";
-import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
 
 export const arrivalDateScene = new Scene(ARRIVAL_DATE_SCENE);
 
+const oneWayKeyboard = (ctx) => {
+  const keyboard = Markup.inlineKeyboard([
+    Markup.callbackButton(ctx.i18n.t("one-way"), ONE_WAY_ACTION),
+  ]);
+  return Extra.markup(keyboard);
+};
+
 arrivalDateScene.enter((ctx) =>
-  ctx.replyWithHTML(ctx.i18n.t("type-arrival-date"), searchNowKeyboard(ctx))
+  ctx.replyWithHTML(ctx.i18n.t("type-arrival-date"), oneWayKeyboard(ctx))
 );
 
 arrivalDateScene.on("message", async (ctx) => {

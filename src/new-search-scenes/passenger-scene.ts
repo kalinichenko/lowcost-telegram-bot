@@ -1,17 +1,21 @@
 const Scene = require("telegraf/scenes/base");
 import { SEARCH_ACTION } from "../actions";
 import { PASSENGERS_SCENE, SEARCH_RESULT_SCENE } from "../scenes";
-import { searchNowKeyboard } from "../keyboards/search-now-keyboard";
+
+const Markup = require("telegraf/markup");
+const Extra = require("telegraf/extra");
+
+const searchNowKeyboard = (ctx) => {
+  const keyboard = Markup.inlineKeyboard([
+    Markup.callbackButton(ctx.i18n.t("search-now"), SEARCH_ACTION),
+  ]);
+  return Extra.markup(keyboard);
+};
 
 export const passengersScene = new Scene(PASSENGERS_SCENE);
 
 passengersScene.enter((ctx) => {
-  ctx.replyWithHTML(
-    "Type the number of adults/teens/children/infants\n" +
-      "e.g: <b>3/2/1</b>\n" +
-      "or simply click the search button\n",
-    searchNowKeyboard(ctx)
-  );
+  ctx.replyWithHTML(ctx.i18n.t("type-passengers"), searchNowKeyboard(ctx));
 });
 
 passengersScene.action(SEARCH_ACTION, (ctx) => {

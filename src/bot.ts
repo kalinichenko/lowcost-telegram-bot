@@ -22,12 +22,17 @@ import {
   Subscription,
   removeFlightSubscriptionById,
 } from "./db/flightSubscriptions";
-import { DEPARTURE_SCENE, SEARCH_RESULT_SCENE } from "./scenes";
+import {
+  DEPARTURE_SCENE,
+  PASSENGERS_SCENE,
+  SEARCH_RESULT_SCENE,
+} from "./scenes";
 
 import {
   NEW_SEARCH_ACTION,
   MAIN_MENU_ACTION,
   SUBSCRIPTION_LIST_ACTION,
+  ONE_WAY_ACTION,
 } from "./actions";
 
 import { SEARCH_ACTION } from "./actions";
@@ -99,4 +104,9 @@ bot.action(SEARCH_ACTION, (ctx) => {
 });
 
 bot.action(MAIN_MENU_ACTION, mainMenu);
+
+bot.action(ONE_WAY_ACTION, (ctx) => {
+  ctx.scene.enter(PASSENGERS_SCENE);
+});
+
 bot.on("message", mainMenu);
