@@ -10,6 +10,7 @@ export interface Subscription extends SearchRequest {
   chatId: number;
   price?: number;
   updatedAt?: Date;
+  locale: string;
 }
 
 export const addFlightSubscriptions = async ({
@@ -26,7 +27,8 @@ export const addFlightSubscriptions = async ({
   teens = 0,
   children = 0,
   infants = 0,
-  price
+  price,
+  locale,
 }: Subscription): Promise<number> => {
   try {
     const client = await pool.connect();
@@ -46,8 +48,9 @@ export const addFlightSubscriptions = async ({
           children,
           infants,
           price,
-          updated_at
-        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id`,
+          updated_at,
+          locale
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING id`,
       [
         chatId,
         departureIataCode,
@@ -63,7 +66,8 @@ export const addFlightSubscriptions = async ({
         children,
         infants,
         price,
-        new Date()
+        new Date(),
+        locale,
       ]
     );
     client.release();
@@ -96,7 +100,8 @@ export const getMyFlightSubscriptions = async (
           children,
           infants,
           price,
-          updated_at
+          updated_at,
+          locale
         FROM flight_subscriptions
         WHERE chat_id=$1`,
       [chatId]
@@ -146,7 +151,8 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
           children,
           infants,
           price,
-          updated_at
+          updated_at,
+          locale
         FROM flight_subscriptions`
     );
     client.release();
@@ -157,8 +163,8 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
   }
 };
 
-const formatSubscriptions = subsctiptions => {
-  return map(subsctiptions, s => {
+const formatSubscriptions = (subsctiptions) => {
+  return map(subsctiptions, (s) => {
     const camelCased = objKeysToCamelCase(s);
 
     return {
@@ -166,7 +172,7 @@ const formatSubscriptions = subsctiptions => {
       departureDateMin: formatDate(camelCased.departureDateMin),
       departureDateMax: formatDate(camelCased.departureDateMax),
       arrivalDateMin: formatDate(camelCased.arrivalDateMin),
-      arrivalDateMax: formatDate(camelCased.arrivalDateMax)
+      arrivalDateMax: formatDate(camelCased.arrivalDateMax),
     };
   });
 };

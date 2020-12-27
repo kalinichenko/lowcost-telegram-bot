@@ -20,5 +20,17 @@
   "no-outbound-flight-found": "No outbound flight found.",
   "price-alert-added": "Price alert added",
   "date": "Date: ${date}",
-  "price": "Price: ${price} EUR"
+  "price": "Price: ${price} EUR",
+  "depature-dates": "Departure: ${dates}",
+  "arrival-dates": "Arrival: ${dates}",
+  "duration": "Duration: ${days}",
+  "adults": "Adults: ${num}",
+  "teens": "Teens: ${num}",
+  "children": "Children: ${num}",
+  "infants": "Infants: ${num}",
+  "last-price": "Last price: ${price} EUR",
+  "updated-at": "Updated at: ${date}",
+  "remove-subscription": "Remove subscription: /remove_subscription_${id}",
+  "subscription-removed": "Subscription removed",
+  "you-have-no-subscriptions": "You have no subscriptions"
 }

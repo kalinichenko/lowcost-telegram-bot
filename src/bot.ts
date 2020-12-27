@@ -69,7 +69,7 @@ bot.action(SUBSCRIPTION_LIST_ACTION, async (ctx) => {
     );
     ctx.replyWithHTML(msg);
   } else {
-    ctx.replyWithHTML("You have no subscriptions");
+    ctx.reply(ctx.i18n.t("you-have-no-subscriptions"));
   }
 });
 
@@ -80,7 +80,7 @@ bot.hears(/^\/remove_subscription_/, (ctx) => {
   if (id) {
     const subscriptionId = parseInt(id, 10);
     removeFlightSubscriptionById(subscriptionId);
-    ctx.reply("Subscription removed");
+    ctx.reply(ctx.i18n.t("subscription-removed"));
   }
 });
 

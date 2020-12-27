@@ -11,6 +11,7 @@ import flightFormatter from "./utils/flightFormatter";
 import { bot } from "./bot";
 import { Trip } from "./types";
 import { logger } from "./logger";
+import { i18n } from "./i18n";
 
 export const scanFlights = async () => {
   const subscriptions = await getAllFlightSubscriptions();
@@ -40,6 +41,7 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     departureIataCode,
     arrivalIataCode,
     price: priceBefore,
+    locale,
   } = subscription;
 
   const { outbound, inbound, amount: price } = cheapestFlight;
@@ -52,12 +54,12 @@ const notify = async (subscription: Subscription, cheapestFlight: Trip) => {
     arrivalIataCode,
     departureTime,
     arrivalTime,
-    locale: null, //TODO
+    locale,
   });
 
-  // TODO nulls
-  const outboundMessage = outbound ? await flightFormatter(outbound, null) : "";
-  const inboundMessage = inbound ? await flightFormatter(inbound, null) : "";
+  const I18n = i18n.createContext(locale);
+  const outboundMessage = outbound ? await flightFormatter(outbound, I18n) : "";
+  const inboundMessage = inbound ? await flightFormatter(inbound, I18n) : "";
 
   const response =
     `<b>New price alert: ${price}EUR</b>\n` +

@@ -120,6 +120,7 @@ searchResultScene.action(CREATE_PRICE_ALERT_ACTION, async (ctx) => {
 
   const subscription: Subscription = {
     ...ctx.session.searchParams,
+    locale: ctx.i18n.locale(),
     chatId,
   };
 

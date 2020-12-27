@@ -16,7 +16,8 @@ CREATE TABLE flight_subscriptions (
   children smallint DEFAULT 0,
   infants smallint DEFAULT 0,
   price numeric(6,2),
-  updated_at timestamp
+  updated_at timestamp,
+  locale char(2)
 );
 
 
