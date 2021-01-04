@@ -1,9 +1,10 @@
-import { head, get } from "lodash";
+import { get } from "lodash";
 import {
   getAllFlightSubscriptions,
   Subscription,
   updateMySubscription,
   removeFlightSubscriptionByChatId,
+  removeFlightSubscriptionById,
 } from "./db/flightSubscriptions";
 import { getRyanairFlight } from "./providers/ryanair/availability";
 import getRyanairUrl from "./providers/ryanair/availability/getUrl";
@@ -12,25 +13,40 @@ import { bot } from "./bot";
 import { Trip } from "./types";
 import { logger } from "./logger";
 import { i18n } from "./i18n";
+import dayjs from "dayjs";
 
 export const scanFlights = async () => {
   const subscriptions = await getAllFlightSubscriptions();
 
   subscriptions.forEach(async (subscription: Subscription) => {
-    const cheapestFlight: Trip = await getRyanairFlight(subscription);
-    logger.info(
-      "updating subscription id: %s new price: %s",
-      subscription.id,
-      cheapestFlight.amount
-    );
+    const { departureDateMin, id, price } = subscription;
 
-    updateMySubscription({
-      price: cheapestFlight.amount,
-      subscriptionId: subscription.id,
-    });
-    const priceChange = Math.abs(cheapestFlight.amount - subscription.price);
-    if (priceChange > subscription.price / 20) {
-      notify(subscription, cheapestFlight);
+    if (dayjs(departureDateMin).isBefore(dayjs())) {
+      removeFlightSubscriptionById(id);
+      logger.debug("removed outdated subscription %o", subscription);
+    } else {
+      const cheapestFlight: Trip = await getRyanairFlight(subscription);
+      if (!cheapestFlight) {
+        logger.debug(
+          "no single flight found for subscription: %o",
+          subscription
+        );
+      } else {
+        logger.debug(
+          "updating subscription id: %s new price: %s",
+          id,
+          cheapestFlight.amount
+        );
+
+        updateMySubscription({
+          price: cheapestFlight.amount,
+          subscriptionId: id,
+        });
+        const priceChange = Math.abs(cheapestFlight.amount - price);
+        if (priceChange > price / 20) {
+          notify(subscription, cheapestFlight);
+        }
+      }
     }
   });
 };

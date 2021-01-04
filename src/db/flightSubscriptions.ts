@@ -1,5 +1,3 @@
-import { map, get } from "lodash";
-
 import pool from "./pool";
 import objKeysToCamelCase from "../utils/objKeysToCamelCase";
 import { SearchRequest } from "../types";
@@ -163,8 +161,8 @@ export const getAllFlightSubscriptions = async (): Promise<Subscription[]> => {
   }
 };
 
-const formatSubscriptions = (subsctiptions) => {
-  return map(subsctiptions, (s) => {
+const formatSubscriptions = (subsctiptions): Subscription[] => {
+  return subsctiptions.map((s) => {
     const camelCased = objKeysToCamelCase(s);
 
     return {
