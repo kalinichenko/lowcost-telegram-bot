@@ -100,6 +100,8 @@ export const getRyanairFlight = async (
         infants,
       });
 
+  logger.trace("outbounds: %o", outbounds);
+
   if (!arrivalDateMin && !durationMin) {
     if (outbounds.length === 0) {
       return null;
@@ -156,8 +158,9 @@ export const getRyanairFlight = async (
         children,
         infants,
       });
+  logger.trace("inbounds: %o", inbounds);
 
-  if (departureDateMax || durationMax) {
+  if (durationMin || durationMax) {
     const trip = getCheapestTripWithDuration({
       outbounds: departureDateMax ? outbounds : [head(outbounds)],
       inbounds: inboundDateMax ? inbounds : [head(inbounds)],
