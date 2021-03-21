@@ -164,7 +164,7 @@ export const getRyanairFlight = async (
       durationMin,
       durationMax,
     });
-    logger.debug("trip:", trip);
+    logger.debug("trip: %o", trip);
     return trip;
   }
 
@@ -179,6 +179,6 @@ export const getRyanairFlight = async (
     amount: (outbound.amount + inbound.amount).toFixed(2),
   };
 
-  logger.debug("trip:", trip);
+  logger.debug("trip: %o", trip);
   return trip;
 };
