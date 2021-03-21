@@ -6,7 +6,7 @@ const ssl = process.env.hasOwnProperty("DATABASE_SSL")
 
 export default new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl,
+  ssl: ssl && { rejectUnauthorized: false },
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
